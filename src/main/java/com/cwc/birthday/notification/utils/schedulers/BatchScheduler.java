@@ -20,7 +20,8 @@ public class BatchScheduler {
         this.importBirthdayJob = importBirthdayJob;
     }
 
-    @Scheduled(cron = "0 0 0 * * *") // Runs every day at midnight
+//    @Scheduled(cron = "0 0 0 * * *") // Runs every day at midnight
+    @Scheduled(cron = "0 * * * * *")
     public void runBatchJob() {
         try {
             JobParameters jobParameters = new JobParametersBuilder()

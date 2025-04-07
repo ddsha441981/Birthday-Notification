@@ -1,6 +1,5 @@
 package com.cwc.birthday.notification.service.impl;
 
-import com.cwc.birthday.notification.exceptions.ResourceNotFoundException;
 import com.cwc.birthday.notification.model.Birthday;
 import com.cwc.birthday.notification.repository.BirthdayRepository;
 import com.cwc.birthday.notification.service.BirthdayService;
@@ -19,12 +18,12 @@ public class BirthdayServiceImpl implements BirthdayService {
 
     @Override
     public Birthday findById(Long id) {
-        return birthdayRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Birthday not found"));
+        return birthdayRepository.findById(id).orElse(null);
     }
 
     @Override
     public void addBirthday(Birthday birthday) {
-        //birthdayRepository.save(birthday);
+        birthdayRepository.save(birthday);
     }
 
     @Override
@@ -33,8 +32,18 @@ public class BirthdayServiceImpl implements BirthdayService {
     }
 
     @Override
-    public void updateBirthday(Birthday birthday) {
-        //birthdayRepository.save(birthday);
+    public void updateBirthday(Birthday birthday,Long id) {
+        Birthday currentBirthdayData = this.birthdayRepository.findById(id).orElse(null);
+        if (currentBirthdayData != null) {
+            birthday.setId(id);
+            birthday.setName(currentBirthdayData.getName());
+            birthday.setBirthDate(currentBirthdayData.getBirthDate());
+            birthday.setEmail(currentBirthdayData.getEmail());
+            birthday.setContactNumber(currentBirthdayData.getContactNumber());
+            birthday.setDeviceToken(currentBirthdayData.getDeviceToken());
+            birthdayRepository.save(birthday);
+        }
+        birthdayRepository.save(birthday);
     }
 
     @Override

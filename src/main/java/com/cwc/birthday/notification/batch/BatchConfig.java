@@ -1,6 +1,7 @@
 package com.cwc.birthday.notification.batch;
 
 import com.cwc.birthday.notification.model.Birthday;
+import com.cwc.birthday.notification.service.BirthdayService;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.job.builder.JobBuilder;
@@ -17,10 +18,12 @@ public class BatchConfig {
 
     private JobRepository jobRepository;
     private PlatformTransactionManager transactionManager;
+    private final BirthdayService birthdayService;
 
-    public BatchConfig(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+    public BatchConfig(JobRepository jobRepository, PlatformTransactionManager transactionManager, BirthdayService birthdayService) {
         this.jobRepository = jobRepository;
         this.transactionManager = transactionManager;
+        this.birthdayService = birthdayService;
     }
 
     @Bean
@@ -49,6 +52,7 @@ public class BatchConfig {
         }
     }
 
+
     @Bean
     public BirthdayItemProcessor processor() {
         return new BirthdayItemProcessor();
@@ -56,6 +60,6 @@ public class BatchConfig {
 
     @Bean
     public BirthdayItemWriter writer() {
-        return new BirthdayItemWriter();
+        return new BirthdayItemWriter(birthdayService);
     }
 }

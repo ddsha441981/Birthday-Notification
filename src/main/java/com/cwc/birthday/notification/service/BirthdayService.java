@@ -14,7 +14,7 @@ public interface BirthdayService {
 
      List<Birthday> getBirthdayList();
 
-     void updateBirthday(Birthday birthday);
+     void updateBirthday(Birthday birthday,Long id);
 
      List<Birthday> getTodayBirthdays();
 }
