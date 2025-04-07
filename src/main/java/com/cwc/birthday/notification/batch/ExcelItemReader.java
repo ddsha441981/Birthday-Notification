@@ -40,8 +40,10 @@ public class ExcelItemReader implements ItemReader<Birthday> {
             String email = getCellAsString(row.getCell(3));
             String contactNumber = getCellAsString(row.getCell(4));
             String deviceToken = getCellAsString(row.getCell(5));
+            String messageType = getCellAsString(row.getCell(6));
+            String eventName = getCellAsString(row.getCell(7));
 
-            return new Birthday(sno,name, birthDate, email, contactNumber, deviceToken);
+            return new Birthday(sno,name, birthDate, email, contactNumber, deviceToken,messageType,eventName);
         }
         return null;
     }

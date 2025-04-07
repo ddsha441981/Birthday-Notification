@@ -24,15 +24,19 @@ public class Birthday {
     private String email;
     private String contactNumber;
     private String deviceToken;
+    private String messageType;
+    private String eventName;
 
 
-    public Birthday(Long sno, String name, LocalDate birthDate, String email, String contactNumber, String deviceToken) {
-        this.s_no = sno;
+    public Birthday(Long s_no, String name, LocalDate birthDate, String email, String contactNumber, String deviceToken, String messageType, String eventName) {
+        this.s_no = s_no;
         this.name = name;
         this.birthDate = birthDate;
         this.email = email;
         this.contactNumber = contactNumber;
         this.deviceToken = deviceToken;
+        this.messageType = messageType;
+        this.eventName = eventName;
     }
 
     /**

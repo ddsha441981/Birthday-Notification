@@ -47,22 +47,7 @@ public class BirthdayServiceImpl implements BirthdayService {
 
     @Override
     public void addBirthday(Birthday birthday) {
-//        final String DEFAULT_NAME = "Unknown";
-//        final String DEFAULT_EMAIL = "unknown@example.com";
-//        final String DEFAULT_CONTACT = "0000000000";
-//        final String DEFAULT_DEVICE_TOKEN = "NO_TOKEN";
-//
-//        if (!StringUtils.hasText(birthday.getName()) || !StringUtils.hasText(birthday.getEmail()) || !StringUtils.hasText(birthday.getContactNumber()) || !StringUtils.hasText(birthday.getDeviceToken())) {
-//
-//            log.warn("Some fields were missing. Applying default values where necessary.");
-//
-//            birthday.setName(StringUtils.hasText(birthday.getName()) ? birthday.getName() : DEFAULT_NAME);
-//            birthday.setEmail(StringUtils.hasText(birthday.getEmail()) ? birthday.getEmail() : DEFAULT_EMAIL);
-//            birthday.setContactNumber(StringUtils.hasText(birthday.getContactNumber()) ? birthday.getContactNumber() : DEFAULT_CONTACT);
-//            birthday.setDeviceToken(StringUtils.hasText(birthday.getDeviceToken()) ? birthday.getDeviceToken() : DEFAULT_DEVICE_TOKEN);
-//        }
-
-        log.info("✅ Saving birthday record for: {}", birthday.getName());
+        log.info("✅ Saving record for: {}", birthday.getName());
         birthdayRepository.save(birthday);
     }
 
