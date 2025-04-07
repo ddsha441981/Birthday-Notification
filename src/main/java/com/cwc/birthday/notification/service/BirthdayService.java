@@ -1,14 +1,20 @@
 package com.cwc.birthday.notification.service;
 
 import com.cwc.birthday.notification.model.Birthday;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public interface BirthdayService {
 
-    public Birthday findById(Long id);
-    public void addBirthday(Birthday birthday);
+     Birthday findById(Long id);
 
-    public void updateBirthday(Birthday birthday);
+     void addBirthday(Birthday birthday);
+
+     List<Birthday> getBirthdayList();
+
+     void updateBirthday(Birthday birthday);
+
+     List<Birthday> getTodayBirthdays();
 }

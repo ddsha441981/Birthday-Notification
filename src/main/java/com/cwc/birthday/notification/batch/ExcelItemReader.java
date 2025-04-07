@@ -32,9 +32,12 @@ public class ExcelItemReader implements ItemReader<Birthday> {
             Long id = (long) row.getCell(0).getNumericCellValue();
             String name = row.getCell(1).getStringCellValue();
             String dateStr = row.getCell(2).getStringCellValue();
+            String email = row.getCell(3).getStringCellValue();
+            String contactNumber = row.getCell(4).getStringCellValue();
+            String deviceToken = row.getCell(5).getStringCellValue();
             LocalDate birthDate = LocalDate.parse(dateStr, DateTimeFormatter.ISO_LOCAL_DATE);
-            return new Birthday(id, name, birthDate);
+            return new Birthday(id,name,birthDate,email,contactNumber,deviceToken);
         }
-        return null; // Null indicates end of data
+        return null;
     }
 }

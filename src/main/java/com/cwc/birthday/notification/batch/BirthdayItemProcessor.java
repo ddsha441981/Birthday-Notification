@@ -12,8 +12,8 @@ public class BirthdayItemProcessor implements ItemProcessor<Birthday, Birthday> 
 
     @Override
     public Birthday process(Birthday birthday) throws Exception {
-        Birthday existingBirthday = birthdayService.findById(birthday.getId());
-
+        Long birthdayId = birthday.getId();
+        Birthday existingBirthday = birthdayService.findById(birthdayId);
         if (existingBirthday == null) {
             // New birthday, call add method
             birthdayService.addBirthday(birthday);
