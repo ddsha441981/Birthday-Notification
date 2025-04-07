@@ -22,6 +22,7 @@ public class NotificationAlertServiceImpl implements NotificationServiceAlert {
     private final PushNotification pushNotification;
     private final BirthdayMessagePicker birthdayMessagePicker;
 
+
     public NotificationAlertServiceImpl(EmailNotification emailNotification, SmsNotification smsNotification, PushNotification pushNotification, BirthdayMessagePicker birthdayMessagePicker) {
         this.emailNotification = emailNotification;
         this.smsNotification = smsNotification;

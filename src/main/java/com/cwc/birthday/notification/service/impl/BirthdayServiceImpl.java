@@ -5,6 +5,7 @@ import com.cwc.birthday.notification.repository.BirthdayRepository;
 import com.cwc.birthday.notification.service.BirthdayService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -48,7 +49,11 @@ public class BirthdayServiceImpl implements BirthdayService {
 
     @Override
     public List<Birthday> getTodayBirthdays() {
-        //implement get today birthday from db
-        return List.of();
+
+        LocalDate today = LocalDate.now();
+        int month = today.getMonthValue();
+        int day = today.getDayOfMonth();
+        List<Birthday> birthdayList = birthdayRepository.findByMonthAndDay(month, day);
+        return birthdayList;
     }
 }
