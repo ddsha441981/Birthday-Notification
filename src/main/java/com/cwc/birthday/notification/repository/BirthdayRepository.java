@@ -11,13 +11,8 @@ import java.util.Optional;
 
 public interface BirthdayRepository extends JpaRepository<Birthday, Long> {
 
-    @Query("SELECT b FROM Birthday b WHERE b.name = :name AND b.birthDate = :birthDate AND b.email = :email")
-    Optional<Birthday> findExisting(@Param("name") String name, @Param("birthDate") LocalDate birthDate, @Param("email") String email);
-
-
     @Query("SELECT b FROM Birthday b WHERE FUNCTION('MONTH', b.birthDate) = :month AND FUNCTION('DAY', b.birthDate) = :day")
     List<Birthday> findByMonthAndDay(@Param("month") int month, @Param("day") int day);
-
 
 
     @Query("SELECT b FROM Birthday b WHERE b.name = :name AND b.birthDate = :birthDate AND b.email = :email")

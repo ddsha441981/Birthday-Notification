@@ -25,6 +25,7 @@ public class BatchScheduler {
     public void runBatchJob() {
         try {
             JobParameters jobParameters = new JobParametersBuilder()
+                    .addString("filePath","C:/data/birthdays.xlsx")
                     .addLong("startTime", System.currentTimeMillis())
                     .toJobParameters();
             jobLauncher.run(importBirthdayJob, jobParameters);

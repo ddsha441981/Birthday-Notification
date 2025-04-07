@@ -6,6 +6,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.core.io.ClassPathResource;
 
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -15,13 +16,17 @@ public class ExcelItemReader implements ItemReader<Birthday> {
 
     private Iterator<Row> rowIterator;
 
-    public ExcelItemReader() throws Exception {
-        ClassPathResource resource = new ClassPathResource("birthdays.xlsx");
-        InputStream is = resource.getInputStream();
-        Workbook workbook = new XSSFWorkbook(is);
-        Sheet sheet = workbook.getSheetAt(0); // First sheet
-        rowIterator = sheet.iterator();
-        rowIterator.next(); // Skip header row
+    public ExcelItemReader(String filePath) {
+        try (InputStream is = new FileInputStream(filePath)) {
+            Workbook workbook = new XSSFWorkbook(is);
+            Sheet sheet = workbook.getSheetAt(0);
+            rowIterator = sheet.iterator();
+            if (rowIterator.hasNext()) {
+                rowIterator.next(); // skip header
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to load Excel file: " + filePath, e);
+        }
     }
 
     @Override
