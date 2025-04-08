@@ -58,9 +58,84 @@ The application uses an **Excel file** as the primary data source for storing us
 
 ## 🚀 Getting Started
 
-> Coming soon: Setup instructions, Excel , and example API calls.
+### ✅ Prerequisites
+- Java 17+
+- Maven
+- MySQL running with the correct schema (e.g., `birthday_notification`)
+- Excel file: `birthdays.xlsx` placed in `src/main/resources/`
 
 ---
+
+### ▶️ Running the Application
+
+To run the Spring Boot application:
+```bash
+mvn spring-boot:run
+```
+
+```bash
+mvn clean install
+java -jar target/your-app-name.jar
+```
+---
+
+### Excel File Instructions
+
+Place the `birthdays.xlsx` file inside the `src/main/resources/` directory. The required columns in the Excel file are:
+
+- **S.No**: Serial number of the entry.
+- **Name**: Name of the individual.
+- **Birth Date**: Date of birth in the format MM/dd/yyyy.
+- **Email**: Email address of the individual.
+- **Contact Number**: Phone number of the individual.
+- **Device Token**: Firebase device token for push notifications.
+- **Message Type**: Type of message (e.g., Birthday, Anniversary, Festival).
+- **Event Name**: Name of the event (only for festivals like Diwali, Holi, etc.).
+---
+### ⏰ When Does the Batch Job Run?
+
+The batch job reads the Excel file and processes users based on today's date. You can schedule the job using `@Scheduled` (e.g., every morning at 9 AM). The job loads data from Excel at runtime, so any file updates should be saved before the job starts.
+
+---
+
+### 📩 When Are Notifications Sent?
+
+Once the batch job runs, notifications are sent for users with today's event (birthday, anniversary, festival):
+
+- 🎉 A random message is picked based on `messageType` and `eventName`.
+- ✉️ Email is sent if an email is present.
+- 📱 SMS is sent if a contact number is present.
+- 🔔 Push notification is sent if a device token is present.
+
+---
+
+### 📡 Sample API Call (Paginated)
+
+To view all birthdays (with pagination):
+
+```bash
+GET /birthdays?page=0&size=10
+```
+---
+### Sample Response
+```bash
+{
+  "content": [
+    {
+      "name": "John Doe",
+      "birthDate": "1990-04-07",
+      "email": "john@example.com",
+      "contactNumber": "9876543210",
+      "messageType": "Birthday"
+    }
+  ],
+  "pageable": { ... },
+  "totalElements": 10,
+  "totalPages": 1,
+  "number": 0,
+  "size": 10
+}
+```
 
 ## 👨‍💻 Author
 
