@@ -39,7 +39,7 @@ public class BatchConfig {
     public Step step1() throws Exception {
         return new StepBuilder("step1", jobRepository)
                 .<Birthday, Birthday>chunk(10, transactionManager)
-                .reader(reader(null))// dynamic file update
+                .reader(reader(null))// dynamic file update no need to restaert application
                 .processor(processor())
                 .writer(writer())
                 .build();

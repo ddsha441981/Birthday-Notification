@@ -12,16 +12,16 @@ import org.springframework.stereotype.Component;
 public class BatchScheduler {
     private static final Logger log = LoggerFactory.getLogger(BatchScheduler.class);
 
-    private JobLauncher jobLauncher;
-    private Job importBirthdayJob;
+    private final JobLauncher jobLauncher;
+    private final Job importBirthdayJob;
 
     public BatchScheduler(JobLauncher jobLauncher, Job importBirthdayJob) {
         this.jobLauncher = jobLauncher;
         this.importBirthdayJob = importBirthdayJob;
     }
 
-//    @Scheduled(cron = "0 0 0 * * *") // Runs every day at midnight
-    @Scheduled(cron = "0 * * * * *")
+    @Scheduled(cron = "0 0 0 * * *") // Runs every day at midnight
+//    @Scheduled(cron = "0 * * * * *")//Run every min for testing purpose
     public void runBatchJob() {
         try {
             JobParameters jobParameters = new JobParametersBuilder()

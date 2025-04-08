@@ -4,7 +4,6 @@ import com.cwc.birthday.notification.model.Birthday;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.batch.item.ItemReader;
-import org.springframework.core.io.ClassPathResource;
 
 import java.io.FileInputStream;
 import java.io.InputStream;

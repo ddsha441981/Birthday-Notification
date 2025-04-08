@@ -1,10 +1,10 @@
 package com.cwc.birthday.notification.service;
 
 import com.cwc.birthday.notification.model.Birthday;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public interface BirthdayService {
@@ -17,6 +17,7 @@ public interface BirthdayService {
      void addBirthday(Birthday birthday);
 
      List<Birthday> getBirthdayList();
+     Page<Birthday> getBirthdayList(int page, int size);
 
      void updateBirthday(Birthday birthday,Long id);
 

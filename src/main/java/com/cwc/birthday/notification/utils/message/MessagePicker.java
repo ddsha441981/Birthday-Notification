@@ -41,26 +41,5 @@ public class MessagePicker {
             throw new RuntimeException("Error reading message file", e);
         }
     }
-
-//    @Value("${birthday.file.path}")
-//    private String  FILE_NAME;
-//
-//    private final Random random = new Random();
-//
-//    public String getRandomBirthdayMessage() {
-//        try (BufferedReader reader = new BufferedReader(
-//                new InputStreamReader(getClass().getResourceAsStream(FILE_NAME)))) {
-//
-//            List<String> messages = reader.lines()
-//                    .filter(line -> !line.trim().isEmpty())
-//                    .collect(Collectors.toList());
-//            log.info(messages.get(random.nextInt(messages.size())));
-//            return messages.get(random.nextInt(messages.size()));
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return "Wishing you a Happy Birthday!";
-//        }
-//    }
 }
 

@@ -5,6 +5,9 @@ import com.cwc.birthday.notification.repository.BirthdayRepository;
 import com.cwc.birthday.notification.service.BirthdayService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -51,6 +54,12 @@ public class BirthdayServiceImpl implements BirthdayService {
         birthdayRepository.save(birthday);
     }
 
+    @Override
+    public Page<Birthday> getBirthdayList(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return birthdayRepository.findAll(pageable);
+    }
+
 
     @Override
     public List<Birthday> getBirthdayList() {
@@ -74,11 +83,9 @@ public class BirthdayServiceImpl implements BirthdayService {
 
     @Override
     public List<Birthday> getTodayBirthdays() {
-
         LocalDate today = LocalDate.now();
         int month = today.getMonthValue();
         int day = today.getDayOfMonth();
-        List<Birthday> birthdayList = birthdayRepository.findByMonthAndDay(month, day);
-        return birthdayList;
+        return birthdayRepository.findByMonthAndDay(month, day);
     }
 }
