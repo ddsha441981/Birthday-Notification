@@ -18,6 +18,7 @@ public class BirthdayController {
         this.birthdayService = birthdayService;
     }
 
+
     @GetMapping("/birthdays")
     public ResponseEntity<Page<Birthday>> getAllBirthdays(
             @RequestParam(defaultValue = "0") int page,

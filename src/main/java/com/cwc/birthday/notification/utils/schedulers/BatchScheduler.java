@@ -5,6 +5,7 @@ import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -15,17 +16,20 @@ public class BatchScheduler {
     private final JobLauncher jobLauncher;
     private final Job importBirthdayJob;
 
+    @Value("${birthday.excel-file-path}")
+    private String excelFilePath;
+
     public BatchScheduler(JobLauncher jobLauncher, Job importBirthdayJob) {
         this.jobLauncher = jobLauncher;
         this.importBirthdayJob = importBirthdayJob;
     }
 
-    @Scheduled(cron = "0 0 0 * * *") // Runs every day at midnight
-//    @Scheduled(cron = "0 * * * * *")//Run every min for testing purpose
+//    @Scheduled(cron = "0 0 0 * * *") // Runs every day at midnight
+    @Scheduled(cron = "0 * * * * *")//Run every min for testing purpose
     public void runBatchJob() {
         try {
             JobParameters jobParameters = new JobParametersBuilder()
-                    .addString("filePath","C:/data/birthdays.xlsx")
+                    .addString("filePath",excelFilePath)
                     .addLong("startTime", System.currentTimeMillis())
                     .toJobParameters();
             jobLauncher.run(importBirthdayJob, jobParameters);
