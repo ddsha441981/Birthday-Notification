@@ -89,4 +89,12 @@ public class BirthdayServiceImpl implements BirthdayService {
         int day = today.getDayOfMonth();
         return birthdayRepository.findByMonthAndDay(month, day);
     }
+
+    @Override
+    public Page<Birthday> getTodayBirthdays(Pageable pageable) {
+        LocalDate today = LocalDate.now();
+        int month = today.getMonthValue();
+        int day = today.getDayOfMonth();
+        return birthdayRepository.findByMonthAndDay(month,day, pageable);
+    }
 }

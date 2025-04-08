@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Setter
@@ -14,7 +15,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Entity
 @Table(name = "notification_log")
-public class NotificationLog {
+public class NotificationLog  implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -3,6 +3,7 @@ package com.cwc.birthday.notification.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -13,7 +14,7 @@ import java.util.Objects;
 //@AllArgsConstructor
 @Entity
 @Table(name = "birthdays")
-public class Birthday {
+public class Birthday implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

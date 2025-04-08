@@ -2,6 +2,7 @@ package com.cwc.birthday.notification.service;
 
 import com.cwc.birthday.notification.model.Birthday;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +21,8 @@ public interface BirthdayService {
      Page<Birthday> getBirthdayList(int page, int size);
 
      void updateBirthday(Birthday birthday,Long id);
+
+     Page<Birthday> getTodayBirthdays(Pageable pageable);
 
      List<Birthday> getTodayBirthdays();
 }

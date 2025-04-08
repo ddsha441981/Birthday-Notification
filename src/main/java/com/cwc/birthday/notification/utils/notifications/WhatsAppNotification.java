@@ -19,7 +19,7 @@ public class WhatsAppNotification {
     @Value("${twilio.auth-token}")
     private String authToken;
 
-    @Value("${twilio.whatsapp-number}")
+    @Value("${twilio.phone-number}")
     private String fromWhatsAppNumber;
 
     public void sendWhatsAppMessage(String phoneNumber, String message) throws IOException {
