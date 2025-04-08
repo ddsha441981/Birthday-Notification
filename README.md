@@ -73,6 +73,7 @@ To run the Spring Boot application:
 ```bash
 
 mvn spring-boot:run
+---
 
 ## 👨‍💻 Author
 
