@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -20,6 +21,7 @@ import java.util.function.Supplier;
 @Service
 public class NotificationAlertServiceImpl implements NotificationServiceAlert {
     private final Logger log = LoggerFactory.getLogger(NotificationAlertServiceImpl.class);
+
     private final EmailNotification emailNotification;
     private final SmsNotification smsNotification;
     private final PushNotification pushNotification;
@@ -73,6 +75,7 @@ public class NotificationAlertServiceImpl implements NotificationServiceAlert {
         String eventName = birthday.getEventName();
         LocalDate today = LocalDate.now();
 
+
         // Check for duplicates
         if (logRepository.existsByEmailAndEventTypeAndEventNameAndSentDate(email, eventType, eventName, today)) {
             log.info("⏩ Notification already sent today to {} for {} - {}.", name, eventType, eventName);
@@ -113,7 +116,11 @@ public class NotificationAlertServiceImpl implements NotificationServiceAlert {
                 .filter(StringUtils::hasText)
                 .ifPresentOrElse(
                         token -> {
-                            pushNotification.sendPushNotification(token, subject, message);
+                            try {
+                                pushNotification.sendPushNotification(token, subject, message);
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
                             log.info("✅ Push notification sent to {}", name);
                         },
                         () -> log.warn("⚠️ Push not sent: device token is missing for {}", name)

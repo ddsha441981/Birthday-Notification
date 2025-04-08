@@ -51,6 +51,7 @@ public class BirthdayServiceImpl implements BirthdayService {
     @Override
     public void addBirthday(Birthday birthday) {
         log.info("✅ Saving record for: {}", birthday.getName());
+        birthday.setDeviceToken("fcm_android_device_token_1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcd");
         birthdayRepository.save(birthday);
     }
 
