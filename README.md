@@ -78,7 +78,8 @@ mvn clean install
 java -jar target/your-app-name.jar
 ```
 ---
-##Excel File Instructions
+
+### Excel File Instructions
 Place birthdays.xlsx inside src/main/resources/. The required columns are:
 
     S.No
