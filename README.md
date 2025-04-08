@@ -72,6 +72,24 @@ To run the Spring Boot application:
 ```bash
 mvn spring-boot:run
 ```
+
+```bash
+mvn clean install
+java -jar target/your-app-name.jar
+```
+---
+##Excel File Instructions
+Place birthdays.xlsx inside src/main/resources/. The required columns are:
+
+    S.No
+    Name
+    Birth Date (MM/dd/yyyy)
+    Email
+    Contact Number
+    Device Token
+    Message Type (Birthday, Anniversary, Festival)
+    Event Name (only for festivals like Diwali, Holi, etc.)
+
 ---
 
 ## 👨‍💻 Author
