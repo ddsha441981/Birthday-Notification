@@ -117,6 +117,26 @@ To view all birthdays (with pagination):
 GET /birthdays?page=0&size=10
 ```
 ---
+### Sample Response
+```bash
+{
+  "content": [
+    {
+      "name": "John Doe",
+      "birthDate": "1990-04-07",
+      "email": "john@example.com",
+      "contactNumber": "9876543210",
+      "messageType": "Birthday"
+    }
+  ],
+  "pageable": { ... },
+  "totalElements": 10,
+  "totalPages": 1,
+  "number": 0,
+  "size": 10
+}
+```
+
 ## 👨‍💻 Author
 
 **Deendayal Kumawat**  
