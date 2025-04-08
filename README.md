@@ -73,11 +73,16 @@ To run the Spring Boot application:
 ```bash
 mvn spring-boot:run
 
-### Or build and run:
-mvn clean install
-java -jar target/your-app-name.jar
+---
 
-Excel File Instructions
+### Or build and run:
+
+```bash
+  mvn clean install
+  java -jar target/your-app-name.jar
+
+---
+### Excel File Instructions
 
     Place birthdays.xlsx inside src/main/resources/
     Required columns:
@@ -90,46 +95,48 @@ Excel File Instructions
         Message Type – (Birthday, Anniversary, Festival)
         Event Name – (only for festivals like Diwali, Holi, etc.)
 
-⏰ When Does the Batch Job Run?
+### ⏰ When Does the Batch Job Run?
 
     The batch job reads the Excel file and processes users based on today's date.
     You can schedule the job using @Scheduled (e.g., every morning at 9 AM).
     The job loads data from Excel at runtime, so any file updates should be saved before the job starts.
 
-📩 When Are Notifications Sent?
+### 📩 When Are Notifications Sent?
 
-Once the batch job runs:
+### Once the batch job runs:
 
-    For users with today's event (birthday, anniversary, festival):
+   ### For users with today's event (birthday, anniversary, festival):
         🎉 A random message is picked based on messageType and eventName
         ✉️ Email is sent if email is present
         📱 SMS is sent if contact number is present
         🔔 Push notification is sent if device token is present
 
-📡 Sample API Call (Paginated)
+###📡 Sample API Call (Paginated)
 
-To view all birthdays (with pagination):
+###To view all birthdays (with pagination):
 
 
-GET /birthdays?page=0&size=10
-
-###Sample Response
-{
-  "content": [
+---
+```bash
+    GET /birthdays?page=0&size=10
+    
+    ###Sample Response
     {
-      "name": "John Doe",
-      "birthDate": "1990-04-07",
-      "email": "john@example.com",
-      "contactNumber": "9876543210",
-      "messageType": "Birthday"
+      "content": [
+        {
+          "name": "John Doe",
+          "birthDate": "1990-04-07",
+          "email": "john@example.com",
+          "contactNumber": "9876543210",
+          "messageType": "Birthday"
+        }
+      ],
+      "pageable": { ... },
+      "totalElements": 10,
+      "totalPages": 1,
+      "number": 0,
+      "size": 10
     }
-  ],
-  "pageable": { ... },
-  "totalElements": 10,
-  "totalPages": 1,
-  "number": 0,
-  "size": 10
-}
 
 ## 👨‍💻 Author
 
