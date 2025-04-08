@@ -5,9 +5,7 @@ import com.cwc.birthday.notification.model.NotificationLog;
 import com.cwc.birthday.notification.repository.NotificationLogRepository;
 import com.cwc.birthday.notification.service.NotificationServiceAlert;
 import com.cwc.birthday.notification.utils.message.MessagePicker;
-import com.cwc.birthday.notification.utils.notifications.EmailNotification;
-import com.cwc.birthday.notification.utils.notifications.PushNotification;
-import com.cwc.birthday.notification.utils.notifications.SmsNotification;
+import com.cwc.birthday.notification.utils.notifications.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -25,44 +23,57 @@ public class NotificationAlertServiceImpl implements NotificationServiceAlert {
     private final EmailNotification emailNotification;
     private final SmsNotification smsNotification;
     private final PushNotification pushNotification;
+    private final WhatsAppNotification whatsAppNotification;
+    private final VoiceCallNotification voiceCallNotification;
     private final MessagePicker messagePicker;
     private final NotificationLogRepository logRepository;
 
 
-    public NotificationAlertServiceImpl(EmailNotification emailNotification, SmsNotification smsNotification, PushNotification pushNotification, MessagePicker messagePicker, NotificationLogRepository logRepository) {
+    public NotificationAlertServiceImpl(EmailNotification emailNotification, SmsNotification smsNotification, PushNotification pushNotification, WhatsAppNotification whatsAppNotification, VoiceCallNotification voiceCallNotification, MessagePicker messagePicker, NotificationLogRepository logRepository) {
         this.emailNotification = emailNotification;
         this.smsNotification = smsNotification;
         this.pushNotification = pushNotification;
+        this.whatsAppNotification = whatsAppNotification;
+        this.voiceCallNotification = voiceCallNotification;
         this.messagePicker = messagePicker;
         this.logRepository = logRepository;
     }
 
-
     /**
-     * Sends personalized notifications (Email, SMS, and Push) for various occasions such as
-     * Birthdays, Anniversaries, and Festivals.
+     * Sends personalized notifications (Email, SMS, Push, WhatsApp, and Voice Call) for occasions such as Birthdays,
+     * Anniversaries, and Festivals based on the provided event details.
      * <p>
-     * Based on the event type and name, a random message is picked from a corresponding
-     * message file (e.g., birthday_messages.txt, anniversary.txt, or festival-[event].txt),
-     * and delivered through available communication channels. Each channel (Email, SMS, Push)
-     * is triggered only if the relevant contact information is present.
+     * This method selects a random message from a predefined set (e.g., birthday_messages.txt, anniversary.txt, or
+     * festival-[event].txt) based on the event type and optional event name. Notifications are sent through available
+     * channels (Email, SMS, Push, WhatsApp, Voice Call) only if the corresponding contact information (email, phone
+     * number, or device token) is provided. Duplicate notifications for the same recipient and event on the same day
+     * are skipped.
      * </p>
      *
-     * @param supplier a generic supplier used for returning a custom result (useful for callbacks or logging)
-     * @param birthday the {@link Birthday} object containing recipient's details like name, email, contact number,
-     *                 device token, event type (Birthday, Anniversary, Festival), and optionally event name (e.g., Diwali)
+     * @param supplier a generic {@link Supplier} that provides a custom result, useful for callbacks or additional
+     *                 processing after notifications are sent
+     * @param birthday the {@link Birthday} object containing recipient details, including name, email, contact number,
+     *                 device token, event type (e.g., "Birthday", "Anniversary", "Festival"), and optionally event name
+     *                 (e.g., "Diwali" for festivals)
      * @param <T>      the type of result returned by the supplier
-     * @return the result provided by the supplier
+     * @return the result provided by the supplier after processing notifications
      *
-     * @implNote Ensure that the Excel file includes accurate and up-to-date values for all necessary fields:
-     *           - Event type (e.g., "Birthday", "Anniversary", "Festival")
-     *           - Event name (only for festivals, e.g., "Diwali", "Holi")
-     *           - Email, Contact Number, and Device Token
+     * @throws RuntimeException if a notification channel fails critically (e.g., due to an unhandled IOException); individual
+     *                          channel failures are logged but do not halt the process
+     *
+     * @implNote Ensure the data source (e.g., Excel file) provides accurate and complete recipient details:
+     *           <ul>
+     *             <li><b>Event Type</b>: Required (e.g., "Birthday", "Anniversary", "Festival")</li>
+     *             <li><b>Event Name</b>: Optional, required only for festivals (e.g., "Diwali", "Holi")</li>
+     *             <li><b>Contact Details</b>: At least one of email, contact number, or device token must be present
+     *                 for notifications to be sent</li>
+     *           </ul>
+     *           Missing or invalid contact details result in skipped notifications for that channel, logged as warnings.
      *
      * @see java.util.function.Supplier
      * @see com.cwc.birthday.notification.model.Birthday
+     * @see com.cwc.birthday.notification.utils.message.MessagePicker
      */
-
     @Override
     public <T> T notifyNotification(Supplier<T> supplier, Birthday birthday) {
         //TODO: Need to implement device token and manage it excel file also if you need get push notification
@@ -94,41 +105,80 @@ public class NotificationAlertServiceImpl implements NotificationServiceAlert {
                 .filter(StringUtils::hasText)
                 .ifPresentOrElse(
                         e -> {
-                            emailNotification.sendEmail(e, subject, htmlMessageFormat, true);
-                            log.info("✅ Email sent to {}", e);
+                            try {
+                                emailNotification.sendEmail(e, subject, htmlMessageFormat, true);
+                                log.info("✅ Email sent successfully to {} for {}", e, eventType);
+                            } catch (Exception ex) {
+                                log.error("❌ Failed to send email to {}: {}", e, ex.getMessage());
+                            }
                         },
-                        () -> log.warn("⚠️ Email not sent: email is missing for {}", name)
+                        () -> log.warn("⚠️ No email sent: Email address missing for {}", name)
                 );
 
-        // TODO: SMS Notification
+        //TODO: SMS Notification
         Optional.ofNullable(contactNumber)
                 .filter(StringUtils::hasText)
                 .ifPresentOrElse(
                         number -> {
-                            smsNotification.sendSms(number, message);
-                            log.info("✅ SMS sent to {}", number);
+                            try {
+                                smsNotification.sendSms(number, message);
+                                log.info("✅ SMS sent successfully to {} for {}", number, eventType);
+                            } catch (IOException ex) {
+                                log.error("❌ Failed to send SMS to {}: {}", number, ex.getMessage());
+                            }
                         },
-                        () -> log.warn("⚠️ SMS not sent: contact number is missing for {}", name)
+                        () -> log.warn("⚠️ No SMS sent: Contact number missing for {}", name)
                 );
 
-        // TODO: Push Notification
+        //TODO: Push Notification
         Optional.ofNullable(deviceToken)
                 .filter(StringUtils::hasText)
                 .ifPresentOrElse(
                         token -> {
                             try {
                                 pushNotification.sendPushNotification(token, subject, message);
-                            } catch (IOException e) {
-                                throw new RuntimeException(e);
+                                log.info("✅ Push notification sent successfully to {} for {}", name, eventType);
+                            } catch (IOException ex) {
+                                log.error("❌ Failed to send push notification to {}: {}", name, ex.getMessage());
                             }
-                            log.info("✅ Push notification sent to {}", name);
                         },
-                        () -> log.warn("⚠️ Push not sent: device token is missing for {}", name)
+                        () -> log.warn("⚠️ No push notification sent: Device token missing for {}", name)
                 );
 
+        //TODO: WhatsApp Notification
+        Optional.ofNullable(contactNumber)
+                .filter(StringUtils::hasText)
+                .ifPresentOrElse(
+                        number -> {
+                            try {
+                                whatsAppNotification.sendWhatsAppMessage(number, message);
+                                log.info("✅ WhatsApp message sent successfully to {} for {}", number, eventType);
+                            } catch (IOException ex) {
+                                log.error("❌ Failed to send WhatsApp message to {}: {}", number, ex.getMessage());
+                            }
+                        },
+                        () -> log.warn("⚠️ No WhatsApp message sent: Contact number missing for {}", name)
+                );
 
-        // Log the notification
-        logRepository.save(new NotificationLog(email, contactNumber, eventType, eventName, today));
+        //TODO: Voice Call Notification
+        Optional.ofNullable(contactNumber)
+                .filter(StringUtils::hasText)
+                .ifPresentOrElse(
+                        number -> {
+                            try {
+                                voiceCallNotification.makePhoneCall(number);
+                                log.info("✅ Voice call initiated successfully to {} for {}", number, eventType);
+                            } catch (IOException ex) {
+                                log.error("❌ Failed to initiate voice call to {}: {}", number, ex.getMessage());
+                            }
+                        },
+                        () -> log.warn("⚠️ No voice call initiated: Contact number missing for {}", name)
+                );
+
+        // Log the successful notification
+        NotificationLog logEntry = new NotificationLog(email, contactNumber, eventType, eventName, today);
+        logRepository.save(logEntry);
+        log.info("📝 Notification logged for {}: {} ({})", name, eventType, eventName);
 
         return supplier.get();
     }

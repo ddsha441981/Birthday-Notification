@@ -25,8 +25,8 @@ public class NotificationScheduler {
     /**
      * Runs daily at 11:59 AM
      * */
-    @Scheduled(cron = "59 11 * * * *")
-    //@Scheduled(cron = "0 * * * * *")//Run every min for testing purpose
+//    @Scheduled(cron = "59 11 * * * *")
+    @Scheduled(cron = "0 * * * * *")//Run every min for testing purpose
     public void start() {
         try {
             List<Birthday> birthdays = birthdayService.getTodayBirthdays();
