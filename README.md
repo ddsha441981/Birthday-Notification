@@ -80,7 +80,8 @@ java -jar target/your-app-name.jar
 ---
 
 ### Excel File Instructions
-Place birthdays.xlsx inside src/main/resources/. The required columns are:
+## Place birthdays.xlsx inside src/main/resources/. The required columns are:
+
 -S.No
 -Name
 -Birth Date (MM/dd/yyyy)
