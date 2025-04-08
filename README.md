@@ -80,16 +80,17 @@ java -jar target/your-app-name.jar
 ---
 
 ### Excel File Instructions
-## Place birthdays.xlsx inside src/main/resources/. The required columns are:
 
--S.No
--Name
--Birth Date (MM/dd/yyyy)
--Email
--Contact Number
--Device Token
--Message Type (Birthday, Anniversary, Festival)
--Event Name (only for festivals like Diwali, Holi, etc.)
+Place the `birthdays.xlsx` file inside the `src/main/resources/` directory. The required columns in the Excel file are:
+
+- **S.No**: Serial number of the entry.
+- **Name**: Name of the individual.
+- **Birth Date**: Date of birth in the format MM/dd/yyyy.
+- **Email**: Email address of the individual.
+- **Contact Number**: Phone number of the individual.
+- **Device Token**: Firebase device token for push notifications.
+- **Message Type**: Type of message (e.g., Birthday, Anniversary, Festival).
+- **Event Name**: Name of the event (only for festivals like Diwali, Holi, etc.).
 
 ---
 ## 👨‍💻 Author
