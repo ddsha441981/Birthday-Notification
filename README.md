@@ -89,7 +89,7 @@ Place birthdays.xlsx inside src/main/resources/. The required columns are:
 -Device Token
 -Message Type (Birthday, Anniversary, Festival)
 -Event Name (only for festivals like Diwali, Holi, etc.)
-
+---
 ## 👨‍💻 Author
 
 **Deendayal Kumawat**  
