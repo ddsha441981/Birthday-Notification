@@ -137,6 +137,12 @@ GET /birthdays?page=0&size=10
 }
 ```
 
+```
+##For Docker
+
+[![View PDF](https://img.icons8.com/ios/50/000000/pdf.png)](files/sample.pdf)
+```
+
 ## 👨‍💻 Author
 
 **Deendayal Kumawat**  
