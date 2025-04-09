@@ -140,8 +140,8 @@ GET /birthdays?page=0&size=10
 
 ### For Docker
 
+[![View PDF](https://img.icons8.com/color/48/000000/pdf.png)](Birthday_Notification_App__Dockerized_Setup_Guide.pdf)
 
-[![View PDF](https://img.icons8.com/ios/50/000000/pdf.png)](Birthday_Notification_App__Dockerized_Setup_Guide.pdf)
 
 ### Global Url
 
