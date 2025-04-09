@@ -23,9 +23,13 @@ public class SmsNotification {
 
     public void sendSms(String phoneNumber, String message) throws IOException {
         // TODO: Implementation sms logic
+
         try {
             Twilio.init(accountSid, authToken);
 
+            if (!phoneNumber.matches("^\\+\\d{10,15}$")) {
+                throw new IllegalArgumentException("Invalid phone number format: " + phoneNumber);
+            }
             Message.creator(
                             new PhoneNumber(phoneNumber),
                             new PhoneNumber(fromNumber),

@@ -4,6 +4,7 @@ import com.cwc.birthday.notification.model.Birthday;
 import com.cwc.birthday.notification.model.NotificationLog;
 import com.cwc.birthday.notification.repository.NotificationLogRepository;
 import com.cwc.birthday.notification.service.NotificationServiceAlert;
+import com.cwc.birthday.notification.utils.PhoneNumberUtil;
 import com.cwc.birthday.notification.utils.message.MessagePicker;
 import com.cwc.birthday.notification.utils.notifications.*;
 import org.slf4j.Logger;
@@ -97,6 +98,9 @@ public class NotificationAlertServiceImpl implements NotificationServiceAlert {
                 birthday.getMessageType(), birthday.getEventName()
         );
 
+        // E.164 format (+) for phone number
+        String phoneNumber = PhoneNumberUtil.formatToE164(contactNumber);
+
         String subject = "🎉 " + birthday.getMessageType() + " Wishes for " + birthday.getName();
         String htmlMessageFormat = "<h2>Dear " + birthday.getName() + ",</h2><p>" + message + "</p>";
 
@@ -116,7 +120,7 @@ public class NotificationAlertServiceImpl implements NotificationServiceAlert {
                 );
 
         //TODO: SMS Notification
-        Optional.ofNullable(contactNumber)
+        Optional.of(phoneNumber)
                 .filter(StringUtils::hasText)
                 .ifPresentOrElse(
                         number -> {
@@ -146,7 +150,7 @@ public class NotificationAlertServiceImpl implements NotificationServiceAlert {
                 );
 
         //TODO: WhatsApp Notification
-        Optional.ofNullable(contactNumber)
+        Optional.of(phoneNumber)
                 .filter(StringUtils::hasText)
                 .ifPresentOrElse(
                         number -> {
@@ -161,7 +165,7 @@ public class NotificationAlertServiceImpl implements NotificationServiceAlert {
                 );
 
         //TODO: Voice Call Notification
-        Optional.ofNullable(contactNumber)
+        Optional.of(phoneNumber)
                 .filter(StringUtils::hasText)
                 .ifPresentOrElse(
                         number -> {
@@ -176,7 +180,7 @@ public class NotificationAlertServiceImpl implements NotificationServiceAlert {
                 );
 
         // Log the successful notification
-        NotificationLog logEntry = new NotificationLog(email, contactNumber, eventType, eventName, today);
+        NotificationLog logEntry = new NotificationLog(email, phoneNumber, eventType, eventName, today);
         logRepository.save(logEntry);
         log.info("📝 Notification logged for {}: {} ({})", name, eventType, eventName);
 

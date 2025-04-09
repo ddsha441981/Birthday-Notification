@@ -30,22 +30,32 @@ public class ExcelItemReader implements ItemReader<Birthday> {
 
     @Override
     public Birthday read() {
-        if (rowIterator != null && rowIterator.hasNext()) {
+        while (rowIterator != null && rowIterator.hasNext()) {
             Row row = rowIterator.next();
 
-            Long sno = (long) row.getCell(0).getNumericCellValue();
-            String name = getCellAsString(row.getCell(1));
-            LocalDate birthDate = getDateFromCell(row.getCell(2));
-            String email = getCellAsString(row.getCell(3));
-            String contactNumber = getCellAsString(row.getCell(4));
-            String deviceToken = getCellAsString(row.getCell(5));
-            String messageType = getCellAsString(row.getCell(6));
-            String eventName = getCellAsString(row.getCell(7));
+            if (row == null || row.getCell(0) == null) {
+                continue; // skip empty or malformed rows
+            }
 
-            return new Birthday(sno,name, birthDate, email, contactNumber, deviceToken,messageType,eventName);
+            try {
+                Long sno = (long) row.getCell(0).getNumericCellValue();
+                String name = getCellAsString(row.getCell(1));
+                LocalDate birthDate = getDateFromCell(row.getCell(2));
+                String email = getCellAsString(row.getCell(3));
+                String contactNumber = getCellAsString(row.getCell(4));
+                String deviceToken = getCellAsString(row.getCell(5));
+                String messageType = getCellAsString(row.getCell(6));
+                String eventName = getCellAsString(row.getCell(7));
+
+                return new Birthday(sno, name, birthDate, email, contactNumber, deviceToken, messageType, eventName);
+            } catch (Exception e) {
+                System.err.println("⚠️ Skipping row due to exception: " + e.getMessage());
+                continue;
+            }
         }
         return null;
     }
+
 
     private String getCellAsString(Cell cell) {
         if (cell == null) return "";
