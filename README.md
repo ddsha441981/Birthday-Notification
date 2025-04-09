@@ -137,10 +137,21 @@ GET /birthdays?page=0&size=10
 }
 ```
 
-```
-##For Docker
 
-[![View PDF](https://img.icons8.com/ios/50/000000/pdf.png)](files/sample.pdf)
+### For Docker
+
+[![View PDF](https://img.icons8.com/color/48/000000/pdf.png)](Birthday_Notification_App__Dockerized_Setup_Guide.pdf)
+
+
+### Global Url
+
+```
+http://localhost:8080/
+```
+
+### Optional
+```
+http://localhost:8080/api/v1/birthday/list
 ```
 
 ## 👨‍💻 Author
