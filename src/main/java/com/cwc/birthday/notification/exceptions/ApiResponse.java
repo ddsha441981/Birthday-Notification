@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class ApiResponse<T> {
@@ -15,4 +14,17 @@ public class ApiResponse<T> {
     private boolean success;
     private LocalDateTime timestamp;
     private int statusCode;
+
+    public ApiResponse() {
+        this.timestamp = LocalDateTime.now();
+    }
+
+    public ApiResponse(T data, String message, boolean success, int statusCode) {
+        this.data = data;
+        this.message = message;
+        this.success = success;
+        this.timestamp = LocalDateTime.now();
+        this.statusCode = statusCode;
+    }
+
 }
