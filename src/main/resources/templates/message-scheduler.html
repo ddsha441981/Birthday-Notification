@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard with Message Scheduler</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css"/>
+    <link rel="stylesheet" th:href="@{/css/alertify.min.css}" href="/css/alertify.min.css"/>
+    <link rel="stylesheet" th:href="@{/css/default.min.css}" href="/css/default.min.css"/>
+
+</head>
+<body>
+<!-- Navbar -->
+<nav class="navbar">
+    <div class="navbar-brand">CWC</div>
+    <ul class="navbar-menu">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Dashboard</a></li>
+        <li><a href="#">Reports</a></li>
+        <li><a href="#">Settings</a></li>
+        <li><a href="#">Profile</a></li>
+    </ul>
+</nav>
+
+<!-- Header -->
+<header class="header">
+    <h1>Message Schedule System</h1>
+    <p>View and manage your data efficiently</p>
+</header>
+
+<!-- Main Content -->
+<main class="container">
+    <div class="table-header">
+        <h2 class="table-title">User Data</h2>
+        <button class="schedule-btn" id="scheduleBtn">Schedule Message</button>
+    </div>
+
+    <table class="data-table" id="dataTable">
+        <thead>
+        <tr>
+            <th>Message</th>
+            <th>Channels</th>
+            <th>Phone Numbers</th>
+            <th>Emails</th>
+           <th>Schedule Time</th>
+            <th>Status</th>
+        </tr>
+        </thead>
+        <tbody id="tableBody">
+        <!-- Table data will be inserted here by JavaScript -->
+        <tbody>
+            <tr class="no-data-row">
+                <td colspan="6" class="no-data">No scheduled messages found.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="pagination" id="pagination">
+        <!-- Pagination buttons will be inserted here by JavaScript -->
+    </div>
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+    <p>&copy; 2025 AppDashboard. All rights reserved.</p>
+</footer>
+
+<!-- Message Scheduler Modal -->
+<div class="modal" id="schedulerModal">
+    <div class="modal-content" style="width: 600px; max-width: 90%;">
+        <div class="modal-header">
+            <h3 class="modal-title">Message Scheduler</h3>
+            <button class="close-btn" id="closeModal">&times;</button>
+        </div>
+
+        <div>
+            <label for="phone-input">Phone Numbers:</label>
+            <input type="tel" id="phone-input" class="form-control" placeholder="Enter phone number and press Enter">
+            <div class="info">Add multiple numbers by pressing Enter after each number</div>
+            <div id="phone-tags" style="min-height: 40px; padding: 5px; border: 1px dashed #ddd; border-radius: 4px; margin-bottom: 15px;"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="message">Message Content:</label>
+            <textarea id="message" class="form-control" rows="4" placeholder="Type your message here..."></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Communication Channels:</label>
+            <div class="checkbox-group" style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 20px;">
+                <label class="checkbox-item" style="display: flex; align-items: center; cursor: pointer;">
+                    <input type="checkbox" id="sms-checkbox"> SMS
+                </label>
+                <label class="checkbox-item" style="display: flex; align-items: center; cursor: pointer;">
+                    <input type="checkbox" id="push-checkbox"> Push
+                </label>
+                <label class="checkbox-item" style="display: flex; align-items: center; cursor: pointer;">
+                    <input type="checkbox" id="voice-checkbox"> Voice
+                </label>
+                <label class="checkbox-item" style="display: flex; align-items: center; cursor: pointer;">
+                    <input type="checkbox" id="whatsapp-checkbox"> WhatsApp
+                </label>
+                <label class="checkbox-item" style="display: flex; align-items: center; cursor: pointer;">
+                    <input type="checkbox" id="email-checkbox"> Email
+                </label>
+            </div>
+        </div>
+
+        <div id="email-container" style="padding: 15px; border-left: 3px solid #3498db; background-color: #f5f9ff; margin-bottom: 20px; border-radius: 0 4px 4px 0; display: none;">
+            <label for="email-input">Email Addresses:</label>
+            <input type="email" id="email-input" class="form-control" placeholder="Enter email addresses separated by commas">
+        </div>
+
+        <div style="padding: 15px; border-left: 3px solid #2ecc71; background-color: #f5fff7; margin-bottom: 20px; border-radius: 0 4px 4px 0;">
+            <label for="schedule-datetime">Schedule Date & Time:</label>
+            <input type="datetime-local" id="schedule-datetime" class="form-control">
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-cancel" id="cancelSchedule">Cancel</button>
+            <button type="button" class="btn btn-submit" id="submit-btn">Schedule Message</button>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/alertify.min.js}" src="/js/alertify.min.js"></script>
+<script th:src="@{/js/message-scheduler.js}" src="/js/message-scheduler.js"></script>
+
+</body>
+</html>
+
+
+
+<!---------------------------------------------------------------------------->
+
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org" lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Message Scheduler</title>-->
+<!--    <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css"/>-->
+<!--</head>-->
+<!--<body>-->
+<!--<div class="card">-->
+<!--    <h1>Message Scheduler</h1>-->
+
+<!--    <div>-->
+<!--        <label for="phone-input">Phone Numbers:</label>-->
+<!--        <input type="tel" id="phone-input" placeholder="Enter phone number and press Enter">-->
+<!--        <div class="info">Add multiple numbers by pressing Enter after each number</div>-->
+<!--        <div id="phone-tags"></div>-->
+<!--    </div>-->
+
+<!--    <div>-->
+<!--        <label for="message">Message Content:</label>-->
+<!--        <textarea id="message" rows="4" placeholder="Type your message here..."></textarea>-->
+<!--    </div>-->
+
+<!--    <div>-->
+<!--        <label>Communication Channels:</label>-->
+<!--        <div class="checkbox-group">-->
+<!--            <label class="checkbox-item"><input type="checkbox" id="sms-checkbox"> SMS</label>-->
+<!--            <label class="checkbox-item"><input type="checkbox" id="push-checkbox"> Push</label>-->
+<!--            <label class="checkbox-item"><input type="checkbox" id="voice-checkbox"> Voice</label>-->
+<!--            <label class="checkbox-item"><input type="checkbox" id="whatsapp-checkbox"> WhatsApp</label>-->
+<!--            <label class="checkbox-item"><input type="checkbox" id="email-checkbox"> Email</label>-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--    <div id="email-container" class="email-container">-->
+<!--        <label for="email-input">Email Addresses:</label>-->
+<!--        <input type="email" id="email-input" placeholder="Enter email addresses separated by commas">-->
+<!--    </div>-->
+
+<!--    <div class="schedule-container">-->
+<!--        <label for="schedule-datetime">Schedule Date & Time:</label>-->
+<!--        <input type="datetime-local" id="schedule-datetime">-->
+<!--    </div>-->
+
+<!--    <button id="submit-btn">Schedule Message</button>-->
+<!--</div>-->
+
+<!--&lt;!&ndash; Load external JavaScript &ndash;&gt;-->
+<!--<script th:src="@{/js/message-scheduler.js}" src="/js/message-scheduler.js"></script>-->
+<!--</body>-->
+<!--</html>-->

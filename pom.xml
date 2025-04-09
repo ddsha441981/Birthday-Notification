@@ -82,6 +82,12 @@
 			<version>5.2.5</version>
 		</dependency>
 
+		<!--Thymeleaf-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+
 		<!--For Push notification-->
 		<dependency>
 			<groupId>com.squareup.okhttp3</groupId>
