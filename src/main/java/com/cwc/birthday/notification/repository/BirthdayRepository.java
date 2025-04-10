@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalDate;
 import java.util.List;
 
-public interface BirthdayRepository extends JpaRepository<Birthday, Long> {
+public interface BirthdayRepository extends JpaRepository<Birthday, Long>{//QuerydslPredicateExecutor<Birthday>
 
     @Query("SELECT b FROM Birthday b WHERE FUNCTION('MONTH', b.birthDate) = :month AND FUNCTION('DAY', b.birthDate) = :day")
     List<Birthday> findByMonthAndDay(@Param("month") int month, @Param("day") int day);

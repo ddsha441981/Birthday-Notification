@@ -6,7 +6,10 @@
     const tableBody = document.getElementById("tableBody");
     const paginationContainer = document.getElementById("pagination");
     const schedulerModal = document.getElementById("schedulerModal");
+    const excelModal = document.getElementById("excelModal");
+    // const saveExcel = document.getElementById("saveExcel");
     const scheduleBtn = document.getElementById("scheduleBtn");
+    const excelBtn = document.getElementById("excelBtn");
     const closeModal = document.getElementById("closeModal");
     const cancelSchedule = document.getElementById("cancelSchedule");
     const schedulerForm = document.getElementById("schedulerForm");
@@ -126,6 +129,84 @@
     const formattedDateTime = now.toISOString().slice(0, 16);
     document.getElementById("schedule-datetime").value = formattedDateTime;
 }
+    // Convert Excel serial number to date string
+    function excelDateToJSDate(serial) {
+        const utc_days = Math.floor(serial - 25569);
+        const utc_value = utc_days * 86400;
+        const date_info = new Date(utc_value * 1000);
+        return date_info.toISOString().split('T')[0];
+    }
+
+    let hot;
+    //Excel file model open
+    async function openExcelModel() {
+
+        excelModal.style.display = "block";
+        // Load Excel file from backend
+        const response = await fetch("/api/v1/birthday/load-excel");
+        const arrayBuffer = await response.arrayBuffer();
+        const workbook = XLSX.read(arrayBuffer, { type: "array" });
+        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+        const json = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
+        // Convert Excel serial numbers (dates)
+        const converted = json.map(row =>
+            row.map(cell => {
+                if (typeof cell === "number" && cell > 30000 && cell < 50000) {
+                    return excelDateToJSDate(cell);
+                }
+                return cell;
+            })
+        );
+
+        // Initialize Handsontable
+        const container = document.getElementById("excelContainer");
+        container.innerHTML = "";
+        hot = new Handsontable(container, {
+            data: converted,
+            rowHeaders: true,
+            colHeaders: true,
+            licenseKey: 'non-commercial-and-evaluation',
+            stretchH: 'all',
+            height: 400,
+            width: '100%',
+            manualColumnResize: true,
+            manualRowResize: true,
+            contextMenu: true
+        });
+    }
+
+    //Save Excel data
+    function saveExcelFunc() {
+        const data = hot.getData();
+        const worksheet = XLSX.utils.aoa_to_sheet(data);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+
+        const wbout = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+
+        fetch("/api/v1/birthday/save-excel", {
+            method: "POST",
+            body: wbout,
+            headers: {
+                "Content-Type": "application/octet-stream"
+            }
+        }).then(res => {
+            if (res.ok) {
+                alertify.alert("Saved successfully!");
+                closeExcelModal();
+            } else {
+                alertify.alert("Save failed.");
+            }
+        });
+
+    }
+
+    function closeExcelModal() {
+        document.getElementById("excelModal").style.display = "none";
+    }
+
+
 
     function closeModalFunc() {
     schedulerModal.style.display = "none";
@@ -144,6 +225,8 @@
 
     // Modal button event listeners
     scheduleBtn.addEventListener("click", openModal);
+    excelBtn.addEventListener("click", openExcelModel);
+    // saveExcel.addEventListener("click", saveExcelFunc);
     closeModal.addEventListener("click", closeModalFunc);
     cancelSchedule.addEventListener("click", closeModalFunc);
 

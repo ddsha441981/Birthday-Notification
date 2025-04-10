@@ -9,6 +9,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-public interface ScheduledMessageRepository extends JpaRepository<ScheduledMessage, Long> {
+public interface ScheduledMessageRepository extends JpaRepository<ScheduledMessage, Long> {// QuerydslPredicateExecutor<ScheduledMessage>
     List<ScheduledMessage> findByScheduledAtBeforeAndStatus(LocalDateTime time, MessageStatus status);
 }

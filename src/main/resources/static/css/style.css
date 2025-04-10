@@ -284,6 +284,13 @@ body {
     color: white;
 }
 
+ /*----------------------------------------------------*/
+.caution-text {
+    color: red;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
  /*--------------------------------------------*/
  .tooltip-cell {
      max-width: 150px; /* adjust as needed */

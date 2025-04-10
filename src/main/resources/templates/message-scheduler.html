@@ -7,6 +7,7 @@
     <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css"/>
     <link rel="stylesheet" th:href="@{/css/alertify.min.css}" href="/css/alertify.min.css"/>
     <link rel="stylesheet" th:href="@{/css/default.min.css}" href="/css/default.min.css"/>
+    <link rel="stylesheet" th:href="@{/css/handsontable.min.css}" href="/css/handsontable.min.css"/>
 
 </head>
 <body>
@@ -32,7 +33,24 @@
 <main class="container">
     <div class="table-header">
         <h2 class="table-title">User Data</h2>
+        <button class="schedule-btn" id="excelBtn">Update Excel</button>
         <button class="schedule-btn" id="scheduleBtn">Schedule Message</button>
+    </div>
+
+    <!-- Excel Popup Modal -->
+    <div id="excelModal" style="display:none; position:fixed; top:10%; left:10%; width:80%; height:80%; background:white; border:1px solid #ccc; padding:10px; overflow:auto; z-index:9999;">
+        <h3>Edit Excel</h3>
+        <div id="excelContainer"></div>
+
+        <!-- Caution Message -->
+        <p style="color: red; font-weight: bold; margin-top: 20px;">
+            ⚠️ Caution: Batch will start every midnight at 11:59 PM.
+            Make sure your event is scheduled <u>after</u> the batch starts.
+        </p>
+
+        <br>
+        <button class="schedule-btn" onclick="saveExcelFunc()">💾 Save</button>
+        <button class="schedule-btn" onclick="closeExcelModal()">❌ Close</button>
     </div>
 
     <table class="data-table" id="dataTable">
@@ -125,6 +143,9 @@
 
 <script th:src="@{/js/alertify.min.js}" src="/js/alertify.min.js"></script>
 <script th:src="@{/js/message-scheduler.js}" src="/js/message-scheduler.js"></script>
+<script th:src="@{/js/xlsx.full.min.js}" src="/js/xlsx.full.min.js"></script>
+<script th:src="@{/js/handsontable.min.js}" src="/js/handsontable.min.js"></script>
+
 
 </body>
 </html>

@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
 
-public interface NotificationLogRepository extends JpaRepository<NotificationLog, Long> {
+public interface NotificationLogRepository extends JpaRepository<NotificationLog, Long> {//QuerydslPredicateExecutor<NotificationLog>
     boolean existsByEmailAndEventTypeAndEventNameAndSentDate(
             String email, String eventType, String eventName, LocalDate sentDate);
 }
