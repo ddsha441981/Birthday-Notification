@@ -70,17 +70,6 @@ public class BirthdayController {
     }
 
     //After edit save Excel file
-//    @PostMapping("/save-excel")
-//    public ResponseEntity<String> saveExcel(@RequestBody byte[] excelBytes) {
-//        try {
-//            Files.write(Paths.get("C:/data/birthdays.xlsx"), excelBytes);
-//            return ResponseEntity.ok("Saved");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to save");
-//        }
-//    }
-
     @PostMapping("/save-excel")
     public ResponseEntity<String> saveExcel(@RequestBody byte[] fileContent) {
         try {

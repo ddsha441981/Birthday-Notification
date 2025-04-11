@@ -1,3 +1,9 @@
+// Initial load
+document.addEventListener("DOMContentLoaded", () => {
+    displayData();
+});
+
+
     // Pagination configuration
     const itemsPerPage = 5;
     let currentPage = 1;
@@ -16,72 +22,67 @@
 
     // Fetch and display paginated data from backend
     async function displayData() {
-    try {
-    const response = await fetch(`/api/v1/scheduler?page=${currentPage - 1}&size=${itemsPerPage}`);
-    if (!response.ok) throw new Error("Failed to load data");
+        const loadingMessage = document.getElementById("loadingMessage");
+        loadingMessage.style.display = "block";
 
-    const data = await response.json();
-    const users = data.content;
-    const totalPages = data.totalPages;
+        try {
+            const response = await fetch(`/api/v1/scheduler?page=${currentPage - 1}&size=${itemsPerPage}`);
+            if (!response.ok) throw new Error("Failed to load data");
 
-    // tableBody.innerHTML = "";
+            const data = await response.json();
+            const users = data.content;
+            const totalPages = data.totalPages;
 
-    const noDataRow = document.querySelector(".no-data-row");
-    tableBody.innerHTML = "";
+            const noDataRow = document.querySelector(".no-data-row");
+            tableBody.innerHTML = "";
 
-    if (!users || users.length === 0) {
-    noDataRow.style.display = "table-row";
-    tableBody.appendChild(noDataRow);
-    return;
-} else {
-    noDataRow.style.display = "none";
-}
+            if (!users || users.length === 0) {
+                noDataRow.style.display = "table-row";
+                tableBody.appendChild(noDataRow);
+                return;
+            } else {
+                noDataRow.style.display = "none";
+            }
 
-    users.forEach(user => {
-    const row = document.createElement("tr");
-    let statusColor = "";
-    switch (user.status) {
-    case "SCHEDULED":
-    statusColor = "#3498db"; // Blue
-    break;
-    case "IN_PROGRESS":
-    statusColor = "#f1c40f"; // Yellow
-    break;
-    case "SENT":
-    statusColor = "#2ecc71"; // Green
-    break;
-    case "FAILED":
-    statusColor = "#e74c3c"; // Red
-    break;
-    default:
-    statusColor = "#7f8c8d"; // Gray
-}
+            users.forEach(user => {
+                const row = document.createElement("tr");
+                let statusColor = {
+                    SCHEDULED: "#3498db",
+                    IN_PROGRESS: "#f1c40f",
+                    SENT: "#2ecc71",
+                    FAILED: "#e74c3c"
+                }[user.status] || "#7f8c8d";
 
-    row.innerHTML = `
-                    <td>${user.message}</td>
-                    <td class="tooltip-cell" data-tooltip="${user.channels?.join(', ')}">
-                        ${user.channels?.join(', ')}
-                    </td>
-                    <td class="tooltip-cell" data-tooltip="${user.phoneNumbers?.join(', ')}">
-                        ${user.phoneNumbers?.join(', ')}
-                    </td>
-                    <td class="tooltip-cell" data-tooltip="${user.emailAddresses?.join(', ')}">
-                        ${user.emailAddresses?.join(', ')}
-                    </td>
-                    <td>${user.scheduledAt}</td>
-                    <td><span style="color: ${statusColor}; font-weight: bold;">${user.status}</span></td>
-                `;
+                row.innerHTML = `
+                <td>${user.message}</td>
+                <td class="tooltip-cell" data-tooltip="${user.channels?.join(', ')}">
+                    ${user.channels?.join(', ')}
+                </td>
+                <td class="tooltip-cell" data-tooltip="${user.phoneNumbers?.join(', ')}">
+                    ${user.phoneNumbers?.join(', ')}
+                </td>
+                <td class="tooltip-cell" data-tooltip="${user.emailAddresses?.join(', ')}">
+                    ${user.emailAddresses?.join(', ')}
+                </td>
+                <td>${user.scheduledAt}</td>
+                <td><span style="color: ${statusColor}; font-weight: bold;">${user.status}</span></td>
+<!--                <td>-->
+<!--                    <span style="cursor: pointer; margin-right: 10px;" onclick="modifyCurrentRow()">Modify✏️</span>-->
+<!--                    <span style="cursor: pointer;" onclick="deleteCurrentRow()">Remove🗑️</span>-->
+<!--                </td>-->
 
+            `;
+                tableBody.appendChild(row);
+            });
 
-    tableBody.appendChild(row);
-});
-
-    updatePagination(totalPages);
-} catch (err) {
-    console.error(err);
-    alert("Error loading data.");
-}
-}
+            updatePagination(totalPages);
+        } catch (err) {
+            console.error(err);
+            alert("Error loading data.");
+        } finally {
+            loadingMessage.style.display = "none";
+        }
+    }
 
     // Create pagination controls
     function updatePagination(totalPages) {
@@ -120,6 +121,16 @@
 });
     paginationContainer.appendChild(nextButton);
 }
+
+    // Table edit and remove
+    // function modifyCurrentRow() {
+    //     alert("Modify clicked!");
+    // }
+    //
+    // function deleteCurrentRow() {
+    //     alert("Delete clicked!");
+    // }
+
 
     // Modal open/close functions
     function openModal() {
@@ -195,6 +206,7 @@
             if (res.ok) {
                 alertify.alert("Saved successfully!");
                 closeExcelModal();
+                displayData();
             } else {
                 alertify.alert("Save failed.");
             }
@@ -306,9 +318,4 @@
     console.error(e);
     alert("Failed to schedule message.");
 }
-});
-
-    // Initial load
-    document.addEventListener("DOMContentLoaded", () => {
-    displayData();
 });

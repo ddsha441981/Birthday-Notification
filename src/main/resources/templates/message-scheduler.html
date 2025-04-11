@@ -33,8 +33,8 @@
 <main class="container">
     <div class="table-header">
         <h2 class="table-title">User Data</h2>
-        <button class="schedule-btn" id="excelBtn">Update Excel</button>
-        <button class="schedule-btn" id="scheduleBtn">Schedule Message</button>
+        <button class="schedule-btn" id="excelBtn">📊Update Excel</button>
+        <button class="schedule-btn" id="scheduleBtn">⏰Schedule Message</button>
     </div>
 
     <!-- Excel Popup Modal -->
@@ -43,15 +43,20 @@
         <div id="excelContainer"></div>
 
         <!-- Caution Message -->
+        <p style="color: red; font-weight: bold; margin-top: 30px;">Note: <br> </p>
         <p style="color: red; font-weight: bold; margin-top: 20px;">
-            ⚠️ Caution: Batch will start every midnight at 11:59 PM.
-            Make sure your event is scheduled <u>after</u> the batch starts.
+           1. ⚠️ Caution: Batch will start every midnight at 11:59 PM.
+                 Make sure your event is scheduled <u>after</u> the batch starts. <br>
+           2. ⚠️ Caution: Original Excel file format will be reset after save
         </p>
 
         <br>
-        <button class="schedule-btn" onclick="saveExcelFunc()">💾 Save</button>
-        <button class="schedule-btn" onclick="closeExcelModal()">❌ Close</button>
+        <div class="excel-button-wrapper">
+            <button class="excel-operation-btn" onclick="saveExcelFunc()">💾 Save</button>
+            <button class="excel-operation-btn" onclick="closeExcelModal()">❌ Close</button>
+        </div>
     </div>
+    <div id="loadingMessage" style="display:none; font-weight:bold; padding:10px;">Loading data, please wait...</div>
 
     <table class="data-table" id="dataTable">
         <thead>
@@ -60,8 +65,9 @@
             <th>Channels</th>
             <th>Phone Numbers</th>
             <th>Emails</th>
-           <th>Schedule Time</th>
+            <th>Schedule Time</th>
             <th>Status</th>
+<!--            <th>Action</th>-->
         </tr>
         </thead>
         <tbody id="tableBody">
@@ -80,7 +86,7 @@
 
 <!-- Footer -->
 <footer class="footer">
-    <p>&copy; 2025 AppDashboard. All rights reserved.</p>
+    <p>&copy; 2025 CWC. All rights reserved.</p>
 </footer>
 
 <!-- Message Scheduler Modal -->

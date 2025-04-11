@@ -32,6 +32,9 @@ public class MessageSchedulerController {
             @RequestParam(defaultValue = "10") int size
     ) {
         Page<ScheduledMessage> scheduledMessages = schedulerService.findScheduledMessages(page, size);
+//        scheduledMessages.stream().forEach(scheduledMessage -> {
+//            System.out.println(scheduledMessage.getId());
+//        });
         return new ResponseEntity<>(scheduledMessages, HttpStatus.OK);
     }
 }

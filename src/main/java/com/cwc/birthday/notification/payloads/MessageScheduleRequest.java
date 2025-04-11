@@ -15,6 +15,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MessageScheduleRequest {
+    private Long id;
     private String message;
     private List<String> phoneNumbers;
     private List<String> emailAddresses;
