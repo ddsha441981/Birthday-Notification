@@ -162,10 +162,18 @@ body {
     text-align: left;
 }
 
+/*.data-table td {*/
+/*    padding: 12px 15px;*/
+/*    border-bottom: 1px solid #ddd;*/
+/*}*/
+
 .data-table td {
     padding: 12px 15px;
     border-bottom: 1px solid #ddd;
+    vertical-align: middle;
+    text-align: center;
 }
+
 
 .data-table tr:last-child td {
     border-bottom: none;
@@ -319,7 +327,7 @@ body {
 
  /*--------------------------------------------*/
  .tooltip-cell {
-     max-width: 150px; /* adjust as needed */
+     max-width: 150px;
      white-space: nowrap;
      overflow: hidden;
      text-overflow: ellipsis;
@@ -340,5 +348,24 @@ body {
     width: max-content;
     max-width: 300px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/*-----------------------*/
+.action-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    height: 100%;
+}
+
+.action-icon {
+    font-size: 10px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.action-icon:hover {
+    transform: scale(1.2);
 }
 

@@ -8,8 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/v1/scheduler")
 public class MessageSchedulerController {
@@ -32,9 +30,32 @@ public class MessageSchedulerController {
             @RequestParam(defaultValue = "10") int size
     ) {
         Page<ScheduledMessage> scheduledMessages = schedulerService.findScheduledMessages(page, size);
-//        scheduledMessages.stream().forEach(scheduledMessage -> {
-//            System.out.println(scheduledMessage.getId());
-//        });
+        //To print Scheduled Messages ID
+        scheduledMessages.stream().forEach(scheduledMessage -> {
+            System.out.println(scheduledMessage.getSchedulerId());
+        });
         return new ResponseEntity<>(scheduledMessages, HttpStatus.OK);
     }
+
+    @GetMapping("/{schedulerId}")
+    public ResponseEntity<ScheduledMessage> getScheduledMessageBySchedulerId(@PathVariable("schedulerId")  String schedulerId){
+        ScheduledMessage scheduledMessage = this.schedulerService.findBySchedulerIdMessage(schedulerId);
+        return new ResponseEntity<>(scheduledMessage,HttpStatus.OK);
+    }
+
+    @PutMapping("/update/{schedulerId}")
+    public ResponseEntity<ScheduledMessage> updateScheduledMessage(
+            @PathVariable("schedulerId") String schedulerId,
+            @RequestBody MessageScheduleRequest request) {
+        ScheduledMessage updatedMessage = schedulerService.updateScheduleMessage(request, schedulerId);
+        return ResponseEntity.ok(updatedMessage);
+    }
+
+    @DeleteMapping("/delete/{schedulerId}")
+    public ResponseEntity<Void> deleteScheduledMessage(@PathVariable String schedulerId) {
+        schedulerService.deleteScheduleMessage(schedulerId);
+        return ResponseEntity.noContent().build();
+    }
+
+
 }

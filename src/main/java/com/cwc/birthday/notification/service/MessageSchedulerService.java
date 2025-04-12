@@ -12,4 +12,7 @@ public interface MessageSchedulerService {
     Page<ScheduledMessage> findScheduledMessages(int page, int size);
 
     void processScheduledMessages();
+    ScheduledMessage updateScheduleMessage(MessageScheduleRequest request,String schedulerId);
+    ScheduledMessage findBySchedulerIdMessage(String schedulerId);
+    void deleteScheduleMessage(String schedulerId);
 }

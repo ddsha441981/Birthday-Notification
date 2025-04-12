@@ -6,7 +6,6 @@ import com.twilio.type.PhoneNumber;
 import com.twilio.exception.ApiException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 

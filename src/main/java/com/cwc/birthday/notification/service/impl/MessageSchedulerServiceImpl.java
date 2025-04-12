@@ -1,6 +1,7 @@
 
 package com.cwc.birthday.notification.service.impl;
 
+import com.cwc.birthday.notification.exceptions.ResourceNotFoundException;
 import com.cwc.birthday.notification.model.ChannelTypes;
 import com.cwc.birthday.notification.model.MessageStatus;
 import com.cwc.birthday.notification.model.ScheduledMessage;
@@ -20,6 +21,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MessageSchedulerServiceImpl implements MessageSchedulerService {
@@ -41,12 +43,12 @@ public class MessageSchedulerServiceImpl implements MessageSchedulerService {
     public ScheduledMessage scheduleMessage(MessageScheduleRequest request) {
         ScheduledMessage scheduledMessage = scheduleMessageBuilder(request);
         validateMessageRequest(scheduledMessage);
-        ScheduledMessage saved = messageRepository.save(scheduledMessage);
-        return saved;
+        return messageRepository.save(scheduledMessage);
     }
 
     private ScheduledMessage scheduleMessageBuilder(MessageScheduleRequest request) {
         return ScheduledMessage.builder()
+                .schedulerId(request.getSchedulerId())
                 .message(request.getMessage())
                 .phoneNumbers(new ArrayList<>(request.getPhoneNumbers()))
                 .emailAddresses(new ArrayList<>(request.getEmailAddresses()))
@@ -95,4 +97,33 @@ public class MessageSchedulerServiceImpl implements MessageSchedulerService {
             eventPublisher.publishEvent(message);
         }
     }
+
+    @Override
+    public ScheduledMessage updateScheduleMessage(MessageScheduleRequest request, String schedulerId) {
+        ScheduledMessage scheduledMessage = messageRepository.findBySchedulerId(schedulerId)
+                .orElseThrow(() -> new ResourceNotFoundException("Scheduled message not found for ID: " + schedulerId));
+        scheduledMessage.setMessage(request.getMessage());
+        scheduledMessage.setStatus(MessageStatus.SCHEDULED);
+        scheduledMessage.setScheduledAt(request.getScheduledAt());
+        scheduledMessage.setChannels(request.getChannels());
+        scheduledMessage.setEmailAddresses(request.getEmailAddresses());
+        scheduledMessage.setPhoneNumbers(request.getPhoneNumbers());
+        return messageRepository.save(scheduledMessage);
+    }
+
+
+    @Override
+    public ScheduledMessage findBySchedulerIdMessage(String schedulerId) {
+        return messageRepository.findBySchedulerId(schedulerId)
+                .orElseThrow(() -> new ResourceNotFoundException("Scheduled message not found for ID: " + schedulerId));
+    }
+
+    @Override
+    public void deleteScheduleMessage(String schedulerId) {
+        ScheduledMessage scheduledMessage = messageRepository.findBySchedulerId(schedulerId)
+                .orElseThrow(() -> new ResourceNotFoundException("Scheduled message not found for ID: " + schedulerId));
+        messageRepository.delete(scheduledMessage);
+    }
+
+
 }

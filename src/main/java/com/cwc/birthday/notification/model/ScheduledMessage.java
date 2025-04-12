@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -20,6 +21,16 @@ public class ScheduledMessage implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false, updatable = false, unique = true, length = 36)
+    private String schedulerId;
+
+    @PrePersist
+    public void prePersist() {
+        if (schedulerId == null) {
+            schedulerId = UUID.randomUUID().toString();
+        }
+    }
 
     private String message;
 

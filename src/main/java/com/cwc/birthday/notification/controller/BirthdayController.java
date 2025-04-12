@@ -27,8 +27,6 @@ public class BirthdayController {
         this.birthdayService = birthdayService;
     }
 
-
-
     @GetMapping("/list")
     public ResponseEntity<ApiResponse<Page<Birthday>>> getAllBirthdays(
             @RequestParam(defaultValue = "0") int page,
