@@ -199,10 +199,97 @@ async function deleteCurrentRow(schedulerId) {
 }
 
 
+// function viewCurrentRow(schedulerId) {
+//     alertify.success("Viewing current scheduler...");
+//     document.getElementById("viewDetailsModal").style.display = "flex";
+// }
 
-function viewCurrentRow(id) {
-    alertify.success("View clicked!" + id);
+async function viewCurrentRow(schedulerId) {
+    alertify.success("Fetching scheduler details...");
+    try {
+        const res = await fetch(`/api/v1/scheduler/${schedulerId}`);
+        if (!res.ok) throw new Error("Failed to fetch details");
+
+        const data = await res.json();
+
+        // Populate modal fields
+        document.getElementById("view-scheduler-id").textContent = data.schedulerId || "N/A";
+        document.getElementById("view-message").textContent = data.message || "N/A";
+        document.getElementById("view-channels").textContent = data.channels?.join(", ") || "N/A";
+        document.getElementById("view-phone-numbers").textContent = data.phoneNumbers?.join(", ") || "N/A";
+        document.getElementById("view-email-addresses").textContent = data.emailAddresses?.join(", ") || "N/A";
+        document.getElementById("view-scheduled-time").textContent = formatDateTime(data.scheduledAt) || "N/A";
+        document.getElementById("view-status").textContent = data.status || "N/A";
+
+        const statusBadge = document.getElementById("view-status");
+        statusBadge.className = "status-badge " + getStatusBadgeClass(data.status);
+
+        // Show modal
+        document.getElementById("viewDetailsModal").style.display = "flex";
+
+    } catch (error) {
+        console.error("Error loading scheduler:", error);
+        alertify.error("Failed to load scheduler details.");
+    }
 }
+
+
+function formatDateTime(dateTimeStr) {
+    if (!dateTimeStr) return "N/A";
+
+    const date = new Date(dateTimeStr);
+    if (isNaN(date.getTime())) return "Invalid Date";
+
+    return date.toLocaleString("en-US", {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true,
+        timeZoneName: 'short'
+    });
+}
+
+
+function getStatusBadgeClass(status) {
+    switch (status?.toUpperCase()) {
+        case "SCHEDULED":
+            return "status-blue";
+        case "IN_PROGRESS":
+            return "status-yellow";
+        case "SENT":
+            return "status-green";
+        case "FAILED":
+            return "status-red";
+        default:
+            return "status-default";
+    }
+}
+
+
+
+
+function confirmCancel() {
+    if(confirm('Are you sure you want to cancel this scheduled message?')) {
+        document.getElementById('view-status').textContent = 'Cancelled';
+        document.getElementById('view-status').className = 'status-badge status-cancelled';
+    }
+}
+
+window.onclick = function(event) {
+    const modal = document.getElementById('viewDetailsModal');
+    if (event.target === modal) {
+        closeViewModal();
+    }
+}
+
+//Close View Model
+function closeViewModal() {
+    document.getElementById("viewDetailsModal").style.display = "none";
+}
+
 
 //Submit Update
 async function submitUpdate() {

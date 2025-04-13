@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard with Message Scheduler</title>
     <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css"/>
+    <link rel="stylesheet" th:href="@{/css/viewmodel.css}" href="/css/viewmodel.css"/>
     <link rel="stylesheet" th:href="@{/css/alertify.min.css}" href="/css/alertify.min.css"/>
     <link rel="stylesheet" th:href="@{/css/default.min.css}" href="/css/default.min.css"/>
     <link rel="stylesheet" th:href="@{/css/handsontable.min.css}" href="/css/handsontable.min.css"/>
@@ -33,8 +34,8 @@
 <main class="container">
     <div class="table-header">
         <h2 class="table-title">User Data</h2>
-        <button class="schedule-btn" id="excelBtn">📊Update Excel</button>
-        <button class="schedule-btn" id="scheduleBtn">⏰Schedule Message</button>
+        <button class="btn btn-success" id="excelBtn">📊Update Excel</button>
+        <button class="btn btn-success" id="scheduleBtn">⏰Schedule Message</button>
     </div>
 
     <!-- Excel Popup Modal -->
@@ -52,8 +53,8 @@
 
         <br>
         <div class="excel-button-wrapper">
-            <button class="excel-operation-btn" onclick="saveExcelFunc()">💾 Save</button>
-            <button class="excel-operation-btn" onclick="closeExcelModal()">❌ Close</button>
+            <button class="btn btn-primary" onclick="saveExcelFunc()">Save</button>
+            <button class="btn btn-cancel" onclick="closeExcelModal()">Close</button>
         </div>
     </div>
     <div id="loadingMessage" style="display:none; font-weight:bold; padding:10px;">Loading data, please wait...</div>
@@ -92,7 +93,7 @@
 </footer>
 
 <!-- Message Scheduler Modal -->
-<div class="modal" id="schedulerModal">
+<div class="modal" id="schedulerModal" style="display:none;">
     <div class="modal-content" style="width: 600px; max-width: 90%;">
         <div class="modal-header">
             <h3 class="modal-title">Message Scheduler</h3>
@@ -144,13 +145,13 @@
 
         <div class="modal-footer">
             <button type="button" class="btn btn-cancel" id="cancelSchedule">Cancel</button>
-            <button type="button" class="btn btn-submit" id="submit-btn">Schedule Message</button>
+            <button type="button" class="btn btn-primary" id="submit-btn">Schedule Message</button>
         </div>
     </div>
 </div>
 
 <!-- Update Scheduler Modal -->
-<div class="modal" id="updateSchedulerModal">
+<div class="modal" id="updateSchedulerModal" style="display:none;">
     <div class="modal-content" style="width: 600px; max-width: 90%;">
         <div class="modal-header">
             <h3 class="modal-title">Update Scheduled Message</h3>
@@ -200,10 +201,107 @@
 
         <div class="modal-footer">
             <button type="button" class="btn btn-cancel" onclick="closeUpdateModal()">Cancel</button>
-            <button type="button" class="btn btn-submit" onclick="submitUpdate()">Update Message</button>
+            <button type="button" class="btn btn-primary" onclick="submitUpdate()">Update Message</button>
         </div>
     </div>
 </div>
+
+<!-- View Details Modal -->
+<div class="modal"  id="viewDetailsModal" style="display:none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">Scheduled Message Details</h3>
+            <button class="close-btn" onclick="closeViewModal()">&times;</button>
+        </div>
+
+        <div class="card-container">
+            <div class="card">
+                <div class="card-label">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+                        <rect width="20" height="14" x="2" y="5" rx="2" />
+                        <line x1="2" x2="22" y1="10" y2="10" />
+                    </svg>
+                    Scheduler ID:
+                </div>
+                <div class="card-value" id="view-scheduler-id">SCH-2023-04-13-001</div>
+            </div>
+
+            <div class="card">
+                <div class="card-label">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                    </svg>
+                    Message:
+                </div>
+                <div class="card-value" id="view-message">Reminder: Your appointment is scheduled for tomorrow at 10:00 AM. Please arrive 15 minutes early to complete any necessary paperwork.</div>
+            </div>
+
+            <div class="card">
+                <div class="card-label">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                        <polyline points="22,6 12,13 2,6" />
+                    </svg>
+                    Channels:
+                </div>
+                <div class="card-value" id="view-channels">SMS, Email</div>
+            </div>
+
+            <div class="card">
+                <div class="card-label">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                    </svg>
+                    Phone Numbers:
+                </div>
+                <div class="card-value" id="view-phone-numbers">+1 (555) 123-4567, +1 (555) 987-6543</div>
+            </div>
+
+            <div class="card">
+                <div class="card-label">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+                        <rect x="2" y="4" width="20" height="16" rx="2" />
+                        <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                    </svg>
+                    Email Addresses:
+                </div>
+                <div class="card-value" id="view-email-addresses">john.doe@example.com, jane.smith@example.com</div>
+            </div>
+
+            <div class="card">
+                <div class="card-label">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+                        <circle cx="12" cy="12" r="10" />
+                        <polyline points="12 6 12 12 16 14" />
+                    </svg>
+                    Schedule Time:
+                </div>
+                <div class="card-value" id="view-scheduled-time">April 14, 2025 - 08:00 AM (EST)</div>
+            </div>
+
+            <div class="card">
+                <div class="card-label">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+                        <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
+                        <path d="M12 16v-4"/>
+                        <path d="M12 8h.01"/>
+                    </svg>
+                    Status:
+                </div>
+                <div class="card-value">
+                    <span class="status-badge status-pending" id="view-status">Pending</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn btn-cancel" onclick="closeViewModal()">Close</button>
+            <button class="btn btn-danger" onclick="confirmCancel()">Cancel Message</button>
+        </div>
+    </div>
+</div>
+
+
 
 
 <script th:src="@{/js/alertify.min.js}" src="/js/alertify.min.js"></script>
