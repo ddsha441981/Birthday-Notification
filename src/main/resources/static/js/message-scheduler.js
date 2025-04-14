@@ -1,8 +1,11 @@
 // Initial load
 document.addEventListener("DOMContentLoaded", () => {
+    // Ensure modals are closed on load
+    document.getElementById("schedulerModal").style.display = "none";
+    document.getElementById("updateSchedulerModal").style.display = "none";
+    document.getElementById("viewDetailsModal").style.display = "none";
     displayData();
 });
-
 
 // Pagination configuration
 const itemsPerPage = 5;
@@ -13,12 +16,10 @@ const tableBody = document.getElementById("tableBody");
 const paginationContainer = document.getElementById("pagination");
 const schedulerModal = document.getElementById("schedulerModal");
 const excelModal = document.getElementById("excelModal");
-// const saveExcel = document.getElementById("saveExcel");
 const scheduleBtn = document.getElementById("scheduleBtn");
 const excelBtn = document.getElementById("excelBtn");
 const closeModal = document.getElementById("closeModal");
 const cancelSchedule = document.getElementById("cancelSchedule");
-const schedulerForm = document.getElementById("schedulerForm");
 
 // Fetch and display paginated data from backend
 async function displayData() {
@@ -46,30 +47,29 @@ async function displayData() {
         }
 
         users.forEach((user, index) => {
-
             const row = document.createElement("tr");
             let statusColor = {
                 SCHEDULED: "#3498db",
                 IN_PROGRESS: "#f1c40f",
                 SENT: "#2ecc71",
-                FAILED: "#e74c3c"
+                FAILED: "#e74c3c",
+                CANCELLED: "#7f8c8d"
             }[user.status] || "#7f8c8d";
 
             row.innerHTML = `
                 <td>${(currentPage - 1) * itemsPerPage + index + 1}</td>
                 <td>${user.schedulerId.substring(0, 10)}</td>
                 <td>${user.message.substring(0, 8)}</td>
-                <td class="tooltip-cell" data-tooltip="${user.channels?.join(', ')}">
-                    ${user.channels?.join(', ')}
+                <td class="tooltip-cell" data-tooltip="${user.channels?.join(', ') || ''}">
+                    ${user.channels?.join(', ') || ''}
                 </td>
-                <td class="tooltip-cell" data-tooltip="${user.phoneNumbers?.join(', ')}">
-                    ${user.phoneNumbers?.join(', ')}
+                <td class="tooltip-cell" data-tooltip="${user.phoneNumbers?.join(', ') || ''}">
+                    ${user.phoneNumbers?.join(', ') || ''}
                 </td>
-                <td class="tooltip-cell" data-tooltip="${user.emailAddresses?.join(', ')}">
-                    ${user.emailAddresses?.join(', ')}
+                <td class="tooltip-cell" data-tooltip="${user.emailAddresses?.join(', ') || ''}">
+                    ${user.emailAddresses?.join(', ') || ''}
                 </td>
                 <td>${user.scheduledAt}</td>
-                
                 <td><span style="color: ${statusColor}; font-weight: bold;">${user.status}</span></td>
                 <td>
                     <div style="display: flex; align-items: center; gap: 8px;">
@@ -85,7 +85,7 @@ async function displayData() {
         updatePagination(totalPages);
     } catch (err) {
         console.error(err);
-        alert.error("Error loading data.");
+        alertify.error("Error loading data.");
     } finally {
         loadingMessage.style.display = "none";
     }
@@ -96,7 +96,7 @@ function updatePagination(totalPages) {
     paginationContainer.innerHTML = "";
 
     const prevButton = document.createElement("button");
-    prevButton.innerHTML = "&laquo;";
+    prevButton.innerHTML = "«";
     prevButton.disabled = currentPage === 1;
     prevButton.addEventListener("click", () => {
         if (currentPage > 1) {
@@ -118,7 +118,7 @@ function updatePagination(totalPages) {
     }
 
     const nextButton = document.createElement("button");
-    nextButton.innerHTML = "&raquo;";
+    nextButton.innerHTML = "»";
     nextButton.disabled = currentPage === totalPages;
     nextButton.addEventListener("click", () => {
         if (currentPage < totalPages) {
@@ -139,8 +139,8 @@ async function modifyCurrentRow(id) {
         document.getElementById("updateSchedulerModal").style.display = "flex";
 
         // Fill fields
-        document.getElementById("message-update").value = data.message;
-        document.getElementById("datetime-update").value = data.scheduledAt?.slice(0, 16);
+        document.getElementById("message-update").value = data.message || "";
+        document.getElementById("datetime-update").value = data.scheduledAt?.slice(0, 16) || "";
 
         document.getElementById("phone-input-update").value = (data.phoneNumbers || []).join(', ');
         document.getElementById("email-input-update").value = (data.emailAddresses || []).join(', ');
@@ -163,12 +163,10 @@ async function modifyCurrentRow(id) {
     }
 }
 
-
 function closeUpdateModal() {
     document.getElementById("updateSchedulerModal").style.display = "none";
     window.updateSchedulerId = null;
 }
-
 
 async function deleteCurrentRow(schedulerId) {
     alertify.confirm("Are you sure you want to delete this message?",
@@ -183,10 +181,7 @@ async function deleteCurrentRow(schedulerId) {
                 }
 
                 alertify.success("Scheduled message deleted successfully for ID: " + schedulerId);
-
-                const row = document.querySelector(`[data-scheduler-id="${schedulerId}"]`);
-                if (row) row.remove();
-                window.location.reload();
+                displayData(); // Refresh table
             } catch (err) {
                 console.error(err);
                 alertify.error("Failed to delete message.");
@@ -197,12 +192,6 @@ async function deleteCurrentRow(schedulerId) {
         }
     );
 }
-
-
-// function viewCurrentRow(schedulerId) {
-//     alertify.success("Viewing current scheduler...");
-//     document.getElementById("viewDetailsModal").style.display = "flex";
-// }
 
 async function viewCurrentRow(schedulerId) {
     alertify.success("Fetching scheduler details...");
@@ -233,7 +222,6 @@ async function viewCurrentRow(schedulerId) {
     }
 }
 
-
 function formatDateTime(dateTimeStr) {
     if (!dateTimeStr) return "N/A";
 
@@ -252,7 +240,6 @@ function formatDateTime(dateTimeStr) {
     });
 }
 
-
 function getStatusBadgeClass(status) {
     switch (status?.toUpperCase()) {
         case "SCHEDULED":
@@ -263,19 +250,51 @@ function getStatusBadgeClass(status) {
             return "status-green";
         case "FAILED":
             return "status-red";
+        case "CANCELLED":
+            return "status-cancelled";
         default:
             return "status-default";
     }
 }
 
 
+async function confirmReschedule() {
+    alertify.message("This feature is coming soon! We're working on it for a future update.");
+}
 
+async function confirmCancel() {
+        alertify.confirm('Are you sure you want to cancel this scheduled message?',
+            function(){
+                const schedulerId = document.getElementById("view-scheduler-id").textContent;
+                const payload = {
+                    status: "CANCELLED"
+                };
+                alertify.success('Your scheduled message has been canceled');
+            },
+            function(){
+                alertify.error('Cancel');
+            });
 
-function confirmCancel() {
-    if(confirm('Are you sure you want to cancel this scheduled message?')) {
-        document.getElementById('view-status').textContent = 'Cancelled';
-        document.getElementById('view-status').className = 'status-badge status-cancelled';
-    }
+        try {
+            const res = await fetch(`/api/v1/scheduler/update/status/${schedulerId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (!res.ok) throw new Error("Failed to update status");
+
+            alertify.success("Message cancelled successfully!");
+            document.getElementById("view-status").textContent = 'CANCELLED';
+            document.getElementById("view-status").className = 'status-badge status-cancelled';
+            closeViewModal();
+            displayData();
+        } catch (err) {
+            console.error(err);
+            alertify.error("Failed to cancel message.");
+        }
 }
 
 window.onclick = function(event) {
@@ -285,21 +304,18 @@ window.onclick = function(event) {
     }
 }
 
-//Close View Model
 function closeViewModal() {
     document.getElementById("viewDetailsModal").style.display = "none";
 }
 
-
-//Submit Update
 async function submitUpdate() {
     const id = window.updateSchedulerId;
 
     const payload = {
         message: document.getElementById("message-update").value,
         scheduledAt: document.getElementById("datetime-update").value,
-        phoneNumbers: document.getElementById("phone-input-update").value.split(',').map(e => e.trim()),
-        emailAddresses: document.getElementById("email-input-update").value.split(',').map(e => e.trim()),
+        phoneNumbers: document.getElementById("phone-input-update").value.split(',').map(e => e.trim()).filter(e => e),
+        emailAddresses: document.getElementById("email-input-update").value.split(',').map(e => e.trim()).filter(e => e),
         channels: [
             ...(document.getElementById("sms-update").checked ? ["SMS"] : []),
             ...(document.getElementById("push-update").checked ? ["PUSH"] : []),
@@ -322,15 +338,13 @@ async function submitUpdate() {
 
         alertify.success("Message updated successfully!");
         closeUpdateModal();
-        displayData(); // reload data table
+        displayData();
     } catch (err) {
         console.error(err);
         alertify.error("Failed to update message.");
     }
 }
 
-
-// Modal open/close functions
 function openModal() {
     schedulerModal.style.display = "flex";
     const now = new Date();
@@ -339,7 +353,6 @@ function openModal() {
     document.getElementById("schedule-datetime").value = formattedDateTime;
 }
 
-// Convert Excel serial number to date string
 function excelDateToJSDate(serial) {
     const utc_days = Math.floor(serial - 25569);
     const utc_value = utc_days * 86400;
@@ -349,52 +362,51 @@ function excelDateToJSDate(serial) {
 
 let hot;
 
-//Excel file model open
 async function openExcelModel() {
-
     excelModal.style.display = "block";
-    // Load Excel file from backend
-    const response = await fetch("/api/v1/birthday/load-excel");
-    const arrayBuffer = await response.arrayBuffer();
-    const workbook = XLSX.read(arrayBuffer, {type: "array"});
-    const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-    const json = XLSX.utils.sheet_to_json(worksheet, {header: 1});
+    try {
+        const response = await fetch("/api/v1/birthday/load-excel");
+        const arrayBuffer = await response.arrayBuffer();
+        const workbook = XLSX.read(arrayBuffer, { type: "array" });
+        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+        const json = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
-    // Convert Excel serial numbers (dates)
-    const converted = json.map(row =>
-        row.map(cell => {
-            if (typeof cell === "number" && cell > 30000 && cell < 50000) {
-                return excelDateToJSDate(cell);
-            }
-            return cell;
-        })
-    );
+        const converted = json.map(row =>
+            row.map(cell => {
+                if (typeof cell === "number" && cell > 30000 && cell < 50000) {
+                    return excelDateToJSDate(cell);
+                }
+                return cell;
+            })
+        );
 
-    // Initialize Handsontable
-    const container = document.getElementById("excelContainer");
-    container.innerHTML = "";
-    hot = new Handsontable(container, {
-        data: converted,
-        rowHeaders: true,
-        colHeaders: true,
-        licenseKey: 'non-commercial-and-evaluation',
-        stretchH: 'all',
-        height: 400,
-        width: '100%',
-        manualColumnResize: true,
-        manualRowResize: true,
-        contextMenu: true
-    });
+        const container = document.getElementById("excelContainer");
+        container.innerHTML = "";
+        hot = new Handsontable(container, {
+            data: converted,
+            rowHeaders: true,
+            colHeaders: true,
+            licenseKey: 'non-commercial-and-evaluation',
+            stretchH: 'all',
+            height: 400,
+            width: '100%',
+            manualColumnResize: true,
+            manualRowResize: true,
+            contextMenu: true
+        });
+    } catch (err) {
+        console.error(err);
+        alertify.error("Failed to load Excel data.");
+    }
 }
 
-//Save Excel data
 function saveExcelFunc() {
     const data = hot.getData();
     const worksheet = XLSX.utils.aoa_to_sheet(data);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
 
-    const wbout = XLSX.write(workbook, {bookType: 'xlsx', type: 'array'});
+    const wbout = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
 
     fetch("/api/v1/birthday/save-excel", {
         method: "POST",
@@ -410,14 +422,15 @@ function saveExcelFunc() {
         } else {
             alertify.error("Save failed.");
         }
+    }).catch(err => {
+        console.error(err);
+        alertify.error("Failed to save Excel data.");
     });
-
 }
 
 function closeExcelModal() {
     document.getElementById("excelModal").style.display = "none";
 }
-
 
 function closeModalFunc() {
     schedulerModal.style.display = "none";
@@ -437,7 +450,6 @@ function closeModalFunc() {
 // Modal button event listeners
 scheduleBtn.addEventListener("click", openModal);
 excelBtn.addEventListener("click", openExcelModel);
-// saveExcel.addEventListener("click", saveExcelFunc);
 closeModal.addEventListener("click", closeModalFunc);
 cancelSchedule.addEventListener("click", closeModalFunc);
 
@@ -469,12 +481,20 @@ phoneTagsContainer.addEventListener('click', function (event) {
     }
 });
 
-// Email toggle
+// Email toggle for schedulerModal
 const emailCheckbox = document.getElementById('email-checkbox');
 const emailContainer = document.getElementById('email-container');
 
 emailCheckbox.addEventListener('change', function () {
     emailContainer.style.display = this.checked ? 'block' : 'none';
+});
+
+// Email toggle for updateSchedulerModal
+const emailUpdateCheckbox = document.getElementById('email-update');
+const emailUpdateContainer = document.getElementById('email-container-update');
+
+emailUpdateCheckbox.addEventListener('change', function () {
+    emailUpdateContainer.style.display = this.checked ? 'block' : 'none';
 });
 
 // Submit scheduler form
@@ -492,7 +512,7 @@ submitButton.addEventListener('click', async function () {
 
     let emailAddresses = [];
     if (document.getElementById('email-checkbox').checked) {
-        emailAddresses = document.getElementById('email-input').value.split(',').map(e => e.trim());
+        emailAddresses = document.getElementById('email-input').value.split(',').map(e => e.trim()).filter(e => e);
     }
 
     const payload = {
@@ -506,13 +526,14 @@ submitButton.addEventListener('click', async function () {
     try {
         const response = await fetch('/api/v1/scheduler/schedule', {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         });
 
         if (!response.ok) throw new Error("Failed to schedule message");
         alertify.success("Message scheduled successfully!");
         closeModalFunc();
+        displayData();
     } catch (e) {
         console.error(e);
         alertify.error("Failed to schedule message.");

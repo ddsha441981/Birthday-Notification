@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +22,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class MessageSchedulerServiceImpl implements MessageSchedulerService {
@@ -123,6 +123,15 @@ public class MessageSchedulerServiceImpl implements MessageSchedulerService {
         ScheduledMessage scheduledMessage = messageRepository.findBySchedulerId(schedulerId)
                 .orElseThrow(() -> new ResourceNotFoundException("Scheduled message not found for ID: " + schedulerId));
         messageRepository.delete(scheduledMessage);
+    }
+
+    @Override
+    public boolean changeStatusWhenScheduleMessageCancelled(String schedulerId) {
+        ScheduledMessage scheduledMessage = messageRepository.findBySchedulerId(schedulerId)
+                .orElseThrow(() -> new ResourceNotFoundException("Scheduled message not found for ID: " + schedulerId));
+        scheduledMessage.setStatus(MessageStatus.CANCELLED);
+        this.messageRepository.save(scheduledMessage);
+        return true;
     }
 
 

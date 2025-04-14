@@ -4,5 +4,6 @@ public enum MessageStatus {
     SCHEDULED,
     IN_PROGRESS,
     SENT,
-    FAILED
+    FAILED,
+    CANCELLED,
 }

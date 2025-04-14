@@ -420,6 +420,10 @@
     color: #555;
 }
 
+.status-cancelled {
+    background-color: #7f8c8d;
+    color: white;
+}
 
 /* For demonstration */
 #demo-button {

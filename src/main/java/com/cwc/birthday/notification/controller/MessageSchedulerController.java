@@ -38,9 +38,9 @@ public class MessageSchedulerController {
     }
 
     @GetMapping("/{schedulerId}")
-    public ResponseEntity<ScheduledMessage> getScheduledMessageBySchedulerId(@PathVariable("schedulerId")  String schedulerId){
+    public ResponseEntity<ScheduledMessage> getScheduledMessageBySchedulerId(@PathVariable("schedulerId") String schedulerId) {
         ScheduledMessage scheduledMessage = this.schedulerService.findBySchedulerIdMessage(schedulerId);
-        return new ResponseEntity<>(scheduledMessage,HttpStatus.OK);
+        return new ResponseEntity<>(scheduledMessage, HttpStatus.OK);
     }
 
     @PutMapping("/update/{schedulerId}")
@@ -57,5 +57,11 @@ public class MessageSchedulerController {
         return ResponseEntity.noContent().build();
     }
 
+    @PutMapping("/update/status/{schedulerId}")
+    public ResponseEntity<Boolean> updateStatusWhenCancelScheduleMessage(
+            @PathVariable("schedulerId") String schedulerId) {
+        boolean messageCancelled = schedulerService.changeStatusWhenScheduleMessageCancelled(schedulerId);
+        return ResponseEntity.ok(messageCancelled);
+    }
 
 }
