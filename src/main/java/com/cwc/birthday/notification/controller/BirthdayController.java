@@ -1,10 +1,10 @@
 package com.cwc.birthday.notification.controller;
 
 import com.cwc.birthday.notification.exceptions.ApiResponse;
-import com.cwc.birthday.notification.exceptions.ResourceNotFoundException;
 import com.cwc.birthday.notification.model.Birthday;
 import com.cwc.birthday.notification.service.BirthdayService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,6 +21,8 @@ import java.nio.file.Paths;
 @Slf4j
 public class BirthdayController {
 
+    @Value("${birthday.excel-file-path}")
+    private String excelFilePath;
     private final BirthdayService birthdayService;
 
     public BirthdayController(BirthdayService birthdayService) {
@@ -47,7 +49,7 @@ public class BirthdayController {
     @GetMapping("/load-excel")
     public ResponseEntity<?> loadExcel() {
         try {
-            Path filePath = Paths.get("C:/data/birthdays.xlsx");
+            Path filePath = Paths.get(excelFilePath);
             System.out.println("Trying to read Excel file at: " + filePath.toAbsolutePath());
 
             if (!Files.exists(filePath)) {
@@ -61,7 +63,7 @@ public class BirthdayController {
                     .body(bytes);
 
         } catch (IOException e) {
-            e.printStackTrace(); // See server logs
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error reading Excel file: " + e.getMessage());
         }
@@ -71,7 +73,7 @@ public class BirthdayController {
     @PostMapping("/save-excel")
     public ResponseEntity<String> saveExcel(@RequestBody byte[] fileContent) {
         try {
-            Path path = Paths.get("C:/data/birthdays.xlsx");
+            Path path = Paths.get(excelFilePath);
             Files.write(path, fileContent);
             return ResponseEntity.ok("File saved successfully.");
         } catch (IOException e) {
@@ -80,9 +82,4 @@ public class BirthdayController {
                     .body("Error saving Excel file: " + e.getMessage());
         }
     }
-
-
-
-
-
 }
