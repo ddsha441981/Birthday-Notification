@@ -8,7 +8,7 @@ LABEL org.opencontainers.image.source="https://github.com/ddsha441981/Birthday-N
 LABEL org.opencontainers.image.url="https://birthday-app.company.com"
 LABEL org.opencontainers.image.documentation="https://github.com/ddsha441981/Birthday-Notification/blob/master/README.md"
 LABEL org.opencontainers.image.license="MIT"
-LABEL org.opencontainers.image.revision="5fa986f"
+LABEL org.opencontainers.image.revision="26d8ad6"
 LABEL com.company.team="Notification Team"
 LABEL com.company.contact="codewithcup.developer@gmail.com"
 WORKDIR /app
