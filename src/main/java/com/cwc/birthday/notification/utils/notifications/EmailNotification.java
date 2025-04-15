@@ -19,6 +19,7 @@ public class EmailNotification {
         this.mailSender = mailSender;
     }
 
+    // TODO: Implementation Email sending logic
     public void sendEmail(String to, String subject, String body, boolean isHtml) {
         try {
             MimeMessage message = mailSender.createMimeMessage();

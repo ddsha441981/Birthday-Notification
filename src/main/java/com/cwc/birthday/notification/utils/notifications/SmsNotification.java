@@ -20,10 +20,8 @@ public class SmsNotification {
     @Value("${twilio.phone-number}")
     private String fromNumber;
 
-
+    // TODO: Implementation sms logic
     public void sendSms(String phoneNumber, String message) throws IOException {
-        // TODO: Implementation sms logic
-
         try {
             Twilio.init(accountSid, authToken);
 

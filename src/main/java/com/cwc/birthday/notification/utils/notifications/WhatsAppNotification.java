@@ -21,13 +21,9 @@ public class WhatsAppNotification {
     @Value("${twilio.phone-number}")
     private String fromWhatsAppNumber;
 
+    // TODO: Implementation WhatsApp logic
     public void sendWhatsAppMessage(String phoneNumber, String message) throws IOException {
         Twilio.init(accountSid, authToken);
-
-        // E.164 format (+)
-        if (!phoneNumber.startsWith("+91")) {
-            phoneNumber = "+91" + phoneNumber;
-        }
         try {
             Message
                     .creator(

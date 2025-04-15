@@ -54,9 +54,9 @@ public class MessageSenderServiceImpl implements MessageSenderService {
 
     private void sendSMS(ScheduledMessage message) throws IOException {
         for (String phoneNumber : message.getPhoneNumbers()) {
-            String formatted = PhoneNumberUtil.formatToE164(phoneNumber);
-            smsNotification.sendSms(formatted, message.getMessage());
-            logger.info("SMS sent to {}: {}", formatted, message.getMessage());
+            String afterFormatedPhoneNumber = PhoneNumberUtil.formatToE164(phoneNumber);
+            smsNotification.sendSms(afterFormatedPhoneNumber, message.getMessage());
+            logger.info("SMS sent to {}: {}", afterFormatedPhoneNumber, message.getMessage());
         }
     }
 
@@ -70,17 +70,17 @@ public class MessageSenderServiceImpl implements MessageSenderService {
 
     private void sendVoiceCall(ScheduledMessage message) throws IOException {
         for (String phoneNumber : message.getPhoneNumbers()) {
-            String formatted = PhoneNumberUtil.formatToE164(phoneNumber);
-            voiceCallNotification.makePhoneCall(formatted);
-            logger.info("Voice call made to {} with message: {}", formatted, message.getMessage());
+            String afterFormatedPhoneNumber = PhoneNumberUtil.formatToE164(phoneNumber);
+            voiceCallNotification.makePhoneCall(afterFormatedPhoneNumber);
+            logger.info("Voice call made to {} with message: {}", afterFormatedPhoneNumber, message.getMessage());
         }
     }
 
     private void sendWhatsApp(ScheduledMessage message) throws IOException {
         for (String phoneNumber : message.getPhoneNumbers()) {
-            String formatted = PhoneNumberUtil.formatToE164(phoneNumber);
-            whatsAppNotification.sendWhatsAppMessage(formatted, message.getMessage());
-            logger.info("WhatsApp message sent to {}: {}", formatted, message.getMessage());
+            String afterFormatedPhoneNumber = PhoneNumberUtil.formatToE164(phoneNumber);
+            whatsAppNotification.sendWhatsAppMessage(afterFormatedPhoneNumber, message.getMessage());
+            logger.info("WhatsApp message sent to {}: {}", afterFormatedPhoneNumber, message.getMessage());
         }
     }
 

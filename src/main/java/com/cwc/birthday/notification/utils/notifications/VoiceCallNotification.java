@@ -24,6 +24,7 @@ public class VoiceCallNotification {
     @Value("${twilio.url}")
     private String twimlUrl;
 
+    // TODO: Implementation make call logic
     public void makePhoneCall(String toPhoneNumber) throws IOException {
         Twilio.init(accountSid, authToken);
 
@@ -31,7 +32,8 @@ public class VoiceCallNotification {
             Call.creator(
                             new PhoneNumber(toPhoneNumber),
                             new PhoneNumber(fromPhoneNumber),
-                            URI.create(twimlUrl)
+                            //TODO: Need to implement to read custom message from .txt file  then create own twinUrl and pass dynamically your message
+                            URI.create(twimlUrl)//Currently reading default message when call initiated
                     )
                     .create();
         } catch (ApiException e) {
