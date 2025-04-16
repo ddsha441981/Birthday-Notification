@@ -154,6 +154,27 @@ http://localhost:8080/
 http://localhost:8080/api/v1/birthday/list
 ```
 
+## If you want to push docker inside github
+
+## Build your project
+```
+./mvnw clean package
+```
+## Build Docker image
+```
+docker build -t ghcr.io/ddsha441981/birthday-app:latest .
+
+```
+## Authenticate Docker with GitHub
+```
+echo <YOUR-PAT-TOKEN> | docker login ghcr.io -u ddsha441981 --password-stdin
+```
+## Push Docker image to GitHub Container Registry
+```
+docker push ghcr.io/ddsha441981/birthday-app:latest
+
+```
+
 ## 👨‍💻 Author
 
 **Deendayal Kumawat**  
