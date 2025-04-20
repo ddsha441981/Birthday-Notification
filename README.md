@@ -67,8 +67,15 @@ The application uses an **Excel file** as the primary data source for storing us
 ---
 
 ### ▶️ Running the Application
+## Create a folder inside
+```
+C:\data
+```
+### <span style="color:red">Note:</span> 
+<span style="color:red">And put your excel file birthdays.xlsx (Make sure your file extension must be xlsx)</span>
 
-To run the Spring Boot application:
+
+## To run the Spring Boot application:
 ```bash
 mvn spring-boot:run
 ```
@@ -152,6 +159,27 @@ http://localhost:8080/
 ### Optional
 ```
 http://localhost:8080/api/v1/birthday/list
+```
+
+## If you want to push docker inside github
+
+## Build your project
+```
+./mvnw clean package
+```
+## Build Docker image
+```
+docker build -t ghcr.io/ddsha441981/birthday-app:latest .
+
+```
+## Authenticate Docker with GitHub
+```
+echo <YOUR-PAT-TOKEN> | docker login ghcr.io -u ddsha441981 --password-stdin
+```
+## Push Docker image to GitHub Container Registry
+```
+docker push ghcr.io/ddsha441981/birthday-app:latest
+
 ```
 
 ## 👨‍💻 Author
