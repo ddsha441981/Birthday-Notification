@@ -67,8 +67,15 @@ The application uses an **Excel file** as the primary data source for storing us
 ---
 
 ### ▶️ Running the Application
+## Create a folder inside
+```
+C:\data
+```
+### <span style="color:red">Note:</span> 
+<span style="color:red">And put your excel file birthdays.xlsx (Make sure your file extension must be xlsx)</span>
 
-To run the Spring Boot application:
+
+## To run the Spring Boot application:
 ```bash
 mvn spring-boot:run
 ```
